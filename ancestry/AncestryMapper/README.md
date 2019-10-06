@@ -6,7 +6,7 @@
 4) Replace reduced reference data set by the complete data
    - Download full reference data set from http://bit.ly/1OUstDP
    - Find the path to AncestryMapper package by typing `.libPaths()` in R terminal
-   - Replace the reduced data `AncestryMaper/data/*.rda` by the downloaded reference data (for testing purpose, this step can be skipped. However, the result accuracy can be affected!)
+   - Replace the reduced data `AncestryMaper/data/*.rda` by the downloaded reference data *(for testing purpose, this step can be skipped. However, the result accuracy can be affected!)*
    - Copy the provided `MinMaxFreq.rds` to the same folder above `AncestryMaper/data/`
 5) Run `runAncestryMapper.py` script to calculate ancestry composition
 ```
