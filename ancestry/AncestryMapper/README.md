@@ -1,4 +1,4 @@
-# Ancestry mapping using [AncestryMapper]() package
+# Ancestry mapping using [AncestryMapper](https://cran.r-project.org/web/packages/AncestryMapper/vignettes/AncestryMapper2.0.html) package
 
 1) Install R for [Linux](https://cran.r-project.org/bin/linux/), [Mac OS](https://cran.r-project.org/bin/macosx/) or [Windows](https://cran.r-project.org/bin/windows/base/)
 2) Get [plink](https://www.cog-genomics.org/plink/2.0/) from this website https://www.cog-genomics.org/plink/2.0/. *plink* will be used to convert e.g. VCF or 23andme format to tped format for *AncestryMaper*.
