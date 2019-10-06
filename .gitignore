@@ -1,0 +1,25 @@
+# History files
+.Rhistory
+.Rapp.history
+# Session Data files
+.RData
+# Example code in package build process
+*-Ex.R
+# RStudio files
+*.Rproj
+*.rproj
+*.Rproj.user/
+*.rproj.user
+*.Rproj.user
+*.rprofile
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+# DS_Store
+**/.DS_Store
+ancestry/.DS_Store
+ancestry/admix/.DS_Store
+ancestry/admix/tmp/
+ancestry/AncestryMaper/.DS_Store
+
+.renviron
+.Rproj.user
