@@ -37,7 +37,7 @@ def main(argv):
 			output = arg
 
 	cfg = load_config('config.yml')
-	
+
 	if type == "vcf":
 		print('Convert VCF to 23andme...')
 		if not os.path.exists('tmp'):
@@ -48,7 +48,8 @@ def main(argv):
 	else:
 		admixCMD = 'admix -f %s -v 23andme -o %s' % (input, output)
 
-	subprocess.call(admixCMD, shell=True)
+	subprocess.call(admixCMD, shell = True)
+	print('Finished! Check output %s.txt' % (output))
 
 if __name__ == "__main__":
 	if len(sys.argv[1:]) == 0:

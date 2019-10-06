@@ -19,6 +19,7 @@
 ancestry/.DS_Store
 ancestry/admix/.DS_Store
 ancestry/admix/tmp/
+ancestry/admix/output.txt
 ancestry/AncestryMaper/.DS_Store
 
 .renviron
