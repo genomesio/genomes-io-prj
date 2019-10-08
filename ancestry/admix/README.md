@@ -20,7 +20,7 @@ python runAdmix.py -i example.23andme.txt -t 23andme -o output.txt
 
 ## Input and Output
 ### Input
-Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/blob/master/ancestry/example.23andme.txt)).
+Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)).
 
 ### Output
 Output is a text file showing the ancestry composition predicted using all available reference data (admixture models) in *Admix*. For general usage, one should use the results based on Dodecad's global models (global13, global10 or world9) or HarappaWorld.
