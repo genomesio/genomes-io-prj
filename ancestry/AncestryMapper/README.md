@@ -20,7 +20,7 @@ python runAncestryMapper.py -i ../example.vcf -t vcf -o output
 
 ## Input and Output
 ### Input
-Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/blob/master/ancestry/example.23andme.txt)).
+Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)).
 
 ### Output
 The python script will give 3 output files:
