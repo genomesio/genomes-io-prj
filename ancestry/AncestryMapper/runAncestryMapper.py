@@ -64,7 +64,7 @@ def main(argv):
 	subprocess_cmd((removeSNP, replaceTped, snpList))
 
 	# ancestry mapper
-	mapperCMD = 'RScript mapper.R tmp %s' % (output)
+	mapperCMD = 'Rscript mapper.R tmp %s' % (output)
 	removeTMP = 'rm report_*'
 	renameAmid = 'mv AMid*.amid %s.amid' % (output)
 	subprocess_cmd((mapperCMD, removeTMP, renameAmid))

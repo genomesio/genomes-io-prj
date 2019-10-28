@@ -1,4 +1,4 @@
-pkgs <- c("reshape2", "AncestryMapper")
+pkgs <- c("reshape2", "stringr", "AncestryMapper")
 newPkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(newPkgs)) install.packages(newPkgs)
 lapply(pkgs, library, character.only = TRUE)
@@ -46,9 +46,31 @@ regionDist <- function(distanceDf, cophenoFile) {
 		by = list("region" = mergeDf$Pheno_Region),
 		mean # consider using median
 	)
-	colnames(regionDf) <- c("region", "dist")
+	colnames(regionDf) <- c("region", "distance")
 	# return
+	regionDf[order(regionDf$distance),]
 	return(regionDf)
+}
+
+popDist <- function(distanceDf) {
+    # convert to long format
+    distanceDfMelted <- melt(distanceDf, id.vars = "UNIQID")
+    colnames(distanceDfMelted) <- c("id", "Pheno_Pop", "value")
+    iList <- distanceDfMelted[grepl("I_", distanceDfMelted$Pheno_Pop),]
+    # remove "I_" out of population names
+    iList$Pheno_Pop <- gsub("I_", "", iList$Pheno_Pop)
+    # split pop name and source
+    iList$Pheno_Pop <- gsub("1000.Genomes", "1KG", iList$Pheno_Pop)
+    iList$popName <- strReverse(str_split_fixed(strReverse(iList$Pheno_Pop), "\\.", 2)[,2])
+    iList$popSource <- strReverse(str_split_fixed(strReverse(iList$Pheno_Pop), "\\.", 2)[,1])
+    # return
+    colnames(iList) <- c("id", "Pheno_Pop", "distance", "ethnic_group", "source")
+    iList <- iList[order(iList$distance),]
+    return(iList[,c("ethnic_group", "distance", "source")])
+}
+
+strReverse <- function(x) {
+    sapply(lapply(strsplit(x, NULL), rev), paste, collapse = "")
 }
 
 ############### MAIN ###############
@@ -60,9 +82,10 @@ genetic.distance <- calculateAMidsArith(
 	pathToAriMedoids = Refs,
 	pathAll00 = All00Frq
 )
+genetic.distance <- genetic.distance[1,]
 # # or read existing distance file
 # genetic.distance <- read.csv(
-# 	"AMidtped_ref160_inds1_SNPs230308.amid",
+# 	"/Volumes/External/work/genomesio/ancestry/AMidExample_ref143_inds567_SNPs1000.amid",
 # 	header = TRUE,
 # 	sep = " ",
 # 	stringsAsFactors = FALSE
@@ -75,10 +98,19 @@ dev.off()
 
 # get region distribution
 region <- regionDist(genetic.distance, Corpheno)
-outDf <- region[order(region$dist),]
 write.table(
     region[order(region$dist),],
-    file = paste0(args[2], ".txt"),
+    file = paste0(args[2], "_region_dist.txt"),
+    row.names = FALSE,
+    sep = "\t",
+    quote = FALSE
+)
+
+# get population distribution
+pop <- popDist(genetic.distance)
+write.table(
+    region[order(region$dist),],
+    file = paste0(args[2], "_ethinic_dist.txt"),
     row.names = FALSE,
     sep = "\t",
     quote = FALSE
