@@ -69,7 +69,7 @@ def main(argv):
 	renameAmid = 'mv AMid*.amid %s.amid' % (output)
 	subprocess_cmd((mapperCMD, removeTMP, renameAmid))
 
-	print('Finished! Check output %s.txt, %s.pdf and %s.amid' % (output, output, output))
+	print('Finished! Check output %s\_ethnic_dist.txt, %s\_region_dist.txt, %s.pdf and %s.amid' % (output, output, output, output))
 
 if __name__ == "__main__":
 	if len(sys.argv[1:]) == 0:

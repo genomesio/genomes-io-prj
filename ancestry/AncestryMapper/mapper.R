@@ -110,7 +110,7 @@ write.table(
 pop <- popDist(genetic.distance)
 write.table(
     pop,
-    file = paste0(args[2], "_ethinic_dist.txt"),
+    file = paste0(args[2], "_ethnic_dist.txt"),
     row.names = FALSE,
     sep = "\t",
     quote = FALSE
