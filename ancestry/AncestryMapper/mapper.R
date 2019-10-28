@@ -19,7 +19,7 @@ Corpheno <- system.file('extdata', 'CorPheno', package = 'AncestryMapper')
 
 # Path to dbSNP allele data file
 # NOTE: changed MinMaxFreq.rda to modified MinMaxFreq.rds
-All00Frq <- system.file('data', 'MinMaxFreq.rds', package = 'AncestryMapper')
+All00Frq <- system.file('data', 'MinMaxFreq.rda', package = 'AncestryMapper')
 
 # function to calculate mean region distances
 regionDist <- function(distanceDf, cophenoFile) {
@@ -48,7 +48,7 @@ regionDist <- function(distanceDf, cophenoFile) {
 	)
 	colnames(regionDf) <- c("region", "distance")
 	# return
-	regionDf[order(regionDf$distance),]
+	regionDf <- regionDf[order(regionDf$distance),]
 	return(regionDf)
 }
 

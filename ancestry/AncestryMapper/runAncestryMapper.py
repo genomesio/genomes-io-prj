@@ -65,11 +65,12 @@ def main(argv):
 
 	# ancestry mapper
 	mapperCMD = 'Rscript mapper.R tmp %s' % (output)
-	removeTMP = 'rm report_*'
+	removeTMP = 'rm -rf tmp'
+	removeReport = 'rm report_*'
 	renameAmid = 'mv AMid*.amid %s.amid' % (output)
-	subprocess_cmd((mapperCMD, removeTMP, renameAmid))
+	subprocess_cmd((mapperCMD, removeTMP, removeTMP, renameAmid))
 
-	print('Finished! Check output %s\_ethnic_dist.txt, %s\_region_dist.txt, %s.pdf and %s.amid' % (output, output, output, output))
+	print('Finished! Check output %s_ethnic_dist.txt, %s_region_dist.txt, %s.pdf and %s.amid' % (output, output, output, output))
 
 if __name__ == "__main__":
 	if len(sys.argv[1:]) == 0:
