@@ -56,17 +56,17 @@ popDist <- function(distanceDf) {
     # convert to long format
     distanceDfMelted <- melt(distanceDf, id.vars = "UNIQID")
     colnames(distanceDfMelted) <- c("id", "Pheno_Pop", "value")
-    iList <- distanceDfMelted[grepl("I_", distanceDfMelted$Pheno_Pop),]
-    # remove "I_" out of population names
-    iList$Pheno_Pop <- gsub("I_", "", iList$Pheno_Pop)
+    cList <- distanceDfMelted[grepl("C_", distanceDfMelted$Pheno_Pop),]
+    # remove "C_" out of population names
+    cList$Pheno_Pop <- gsub("C_", "", cList$Pheno_Pop)
     # split pop name and source
-    iList$Pheno_Pop <- gsub("1000.Genomes", "1KG", iList$Pheno_Pop)
-    iList$popName <- strReverse(str_split_fixed(strReverse(iList$Pheno_Pop), "\\.", 2)[,2])
-    iList$popSource <- strReverse(str_split_fixed(strReverse(iList$Pheno_Pop), "\\.", 2)[,1])
+    cList$Pheno_Pop <- gsub("1000.Genomes", "1KG", cList$Pheno_Pop)
+    cList$popName <- strReverse(str_split_fixed(strReverse(cList$Pheno_Pop), "\\.", 2)[,2])
+    cList$popSource <- strReverse(str_split_fixed(strReverse(cList$Pheno_Pop), "\\.", 2)[,1])
     # return
-    colnames(iList) <- c("id", "Pheno_Pop", "distance", "ethnic_group", "source")
-    iList <- iList[order(iList$distance),]
-    return(iList[,c("ethnic_group", "distance", "source")])
+    colnames(cList) <- c("id", "Pheno_Pop", "distance", "ethnic_group", "source")
+    cList <- cList[order(cList$distance),]
+    return(cList[,c("ethnic_group", "distance", "source")])
 }
 
 strReverse <- function(x) {
@@ -82,7 +82,7 @@ genetic.distance <- calculateAMidsArith(
 	pathToAriMedoids = Refs,
 	pathAll00 = All00Frq
 )
-genetic.distance <- genetic.distance[1,]
+
 # # or read existing distance file
 # genetic.distance <- read.csv(
 # 	"/Volumes/External/work/genomesio/ancestry/AMidExample_ref143_inds567_SNPs1000.amid",
@@ -99,7 +99,7 @@ dev.off()
 # get region distribution
 region <- regionDist(genetic.distance, Corpheno)
 write.table(
-    region[order(region$dist),],
+    region,
     file = paste0(args[2], "_region_dist.txt"),
     row.names = FALSE,
     sep = "\t",
@@ -109,7 +109,7 @@ write.table(
 # get population distribution
 pop <- popDist(genetic.distance)
 write.table(
-    region[order(region$dist),],
+    pop,
     file = paste0(args[2], "_ethinic_dist.txt"),
     row.names = FALSE,
     sep = "\t",
