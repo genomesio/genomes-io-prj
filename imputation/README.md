@@ -7,7 +7,7 @@ This imputation module is created based on the source code of [impute.me](https:
 3) Clone this repository into your computer.
 4) Run `setup.sh` script to download reference data from 1000genomes and other tools for the imputation ([impute2](https://mathgen.stats.ox.ac.uk/impute/impute_v2.html), [shapeit](https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.html) and [gtool](https://www.well.ox.ac.uk/~cfreeman/software/gwas/gtool.html))
 5) Set paths to the reference data, tools and imputation modules in the `config.yml` file.
-6) Run `runImputation.py` script to do genetic imputation
+6) Run `runImputation.py` script to do the genetic imputation and tests
 ```
 python runImputation.py -i ../example.23andme.txt -t 23andme
 ```
@@ -25,7 +25,7 @@ The `runImputation.py` will generate a job ID each time it's called.
 
 The **imputation result** will stored in the `imputation` folder, located in the same folder, where the script is called. A summaried result is saved separately in the `output/job_id` folder.
 
-Based on the output in the `imputation` folder, several genetic tests will be performed. Each test has its own reference SNP data and script saved in the corresponding subfolder within the `impute-me` folder. The test's result is stored in `output/job_id/job_id_data.json`.
+Based on the output in the `imputation` folder, several **genetic tests** will be performed. Each test has its own reference SNP data and script saved in the corresponding subfolder within the `impute-me` folder. The test's result is stored in `output/job_id/job_id_data.json`.
 
 ## Tests
 
