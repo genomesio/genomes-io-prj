@@ -29,6 +29,7 @@ Based on the output in the `imputation` folder, several genetic tests will be pe
 ## Tests
 
 Currently there are several tests implemented in this module:
+
 | Test | Output | Note |
 | AllDiseases | GRS, trait, percentage, message | *GRS* = Z-score, *percentage* shows the percentage of the population that have a slower risk score than this person |
 | autoimmuneDiseases | GRS, disease |   |
