@@ -1,6 +1,6 @@
 pkgs <- c("reshape2", "stringr", "AncestryMapper")
 newPkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
-if(length(newPkgs)) install.packages(newPkgs)
+if(length(newPkgs)) install.packages(newPkgs, repos = "http://cran.us.r-project.org")
 lapply(pkgs, library, character.only = TRUE)
 
 args = commandArgs(trailingOnly=TRUE)
