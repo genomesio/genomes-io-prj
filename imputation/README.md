@@ -27,7 +27,7 @@ The **imputation result** will stored in the `imputation` folder, located in the
 
 Based on the output in the `imputation` folder, several **genetic tests** will be performed. Each test has its own reference SNP data and script saved in the corresponding subfolder within the `impute-me` folder. The test's result is stored in `output/job_id/job_id_data.json`. See [example](https://github.com/trvinh/genomes-io-prj/blob/master/imputation/example/id_PujIkrvTG_data.json).
 
-## Tests
+## Genetic tests
 
 Currently there are several tests implemented in this module:
 
