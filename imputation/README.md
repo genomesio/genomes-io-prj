@@ -31,6 +31,7 @@ Based on the output in the `imputation` folder, several genetic tests will be pe
 Currently there are several tests implemented in this module:
 
 | Test | Output | Note |
+| ---- | ------ | ---- |
 | AllDiseases | GRS, trait, percentage, message | *GRS* = Z-score, *percentage* shows the percentage of the population that have a slower risk score than this person |
 | autoimmuneDiseases | GRS, disease |   |
 | BRCA | gene (BRCA1 or BRCA2), user phenotype, normal phenotype, [clinVar](https://www.ncbi.nlm.nih.gov/clinvar/intro/), polyphen (clinical signigicance), sift (Sorting Tolerant From Intolerant), consequence type | Read more about [polyphen](http://genetics.bwh.harvard.edu/pph2/), [sift](https://www.ncbi.nlm.nih.gov/pubmed/19561590) |
