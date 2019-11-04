@@ -7,22 +7,22 @@ export_function <- function (uniqueID, moduleDir, outputDir, functionFile, gtool
     #############
     # First get height
     #############
-    
+
     # get gender
     pDataFile <- paste(outputDir, "/pData.txt", sep = "")
     gender <- read.table(pDataFile, header = TRUE, stringsAsFactors = FALSE, sep = "\t")[1, "gender"]
-    
+
     # get the current best predictor SNPs
     giant_sup_path <- paste0(moduleDir, "/guessMyHeight/SNPs_to_analyze.txt")
     giant_sup <- read.table(giant_sup_path, sep = "\t", header = TRUE, stringsAsFactors = FALSE, row.names = 1)
-    
+
     # get genotypes and calculate gheight
     genotypes <- get_genotypes(uniqueID = uniqueID, request = giant_sup, gtool = gtool, destinationDir = outputDir)
     gheight <- get_GRS(genotypes = genotypes, betas = giant_sup)
-    
+
     # calculate auxilary info
     gheight_snp_count <- paste(sum(!is.na(genotypes[, "genotype"])), "of", nrow(genotypes))
-    
+
     # calculate estimated_real height (note this one may need a lot of fine tuning later)
     women_mean <- 1.62
     women_sd <- 0.0796
@@ -40,11 +40,11 @@ export_function <- function (uniqueID, moduleDir, outputDir, functionFile, gtool
     output[["gheight_Z_score"]] <- gheight
     output[["gheight_snp_count"]] <- gheight_snp_count
     output[["gheight_m_estimate"]] <- gheight_m_estimate_cm
-    
+
     #############
     # Then get colour
     #############
-    
+
     #get the gColour
     GRS_file_name <- paste0(moduleDir, "/hairColour/SNPs_to_analyze.txt")
     GRS_file <- read.table(GRS_file_name, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
@@ -58,16 +58,16 @@ export_function <- function (uniqueID, moduleDir, outputDir, functionFile, gtool
         GRS <- sum(s1[, "score_diff"], na.rm = TRUE) / population_sum_sd
         assign(paste("gColour", component, sep = "_"), GRS)
     }
-    
+
     blond_calibrate <- function(x) {max(c(0, min(c(1, (x+1)/6))))}
     red_calibrate <- function(x) {max(c(0, min(c(1, (x+1)/5))))}
-    
+
     blondeness <- blond_calibrate(gColour_blonde)
     redheadness <- red_calibrate(gColour_red)
-    
+
     # Calculate colour #with the line from the image map
     colour <- hsv(h = 0.1 - (redheadness/10), s = min(c(1, 1 - blondeness + (redheadness/2))), v = blondeness)
-    
-    output[["hair_colour_your_colours"]] <- colour
+
+    output[["hair_colour"]] <- colour
     return(output)
 }

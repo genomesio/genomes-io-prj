@@ -1,10 +1,21 @@
 library(plotly)
 library(jsonlite)
 
-# required data
-json_file <- "/Volumes/External/work/genomesio/imputeme/imputeR/output/id_7e5927q92/id_7e5927q92_data.json"
-ethnicity_pca_file <- "/Volumes/External/work/genomesio/imputeme/imputeR/impute-me/ethnicity/2017-04-03_ethnicity_pca.rdata"
-ethnicity_desc_file <- "/Volumes/External/work/genomesio/imputeme/imputeR/impute-me/ethnicity/2017-04-03_ethnicity_descriptions.txt"
+# get required data
+args = commandArgs(trailingOnly = TRUE)
+if (length(args) < 3) {
+    msg <- paste(
+        "You need to give all these args:",
+        "1: output json file",
+        "2: impute-me/ethnicity/2017-04-03_ethnicity_pca.rdata file",
+        "3: impute-me/ethnicity/2017-04-03_ethnicity_descriptions.txt file"
+    )
+    stop(paste0(msg, "\n"), call. = FALSE)
+}
+
+json_file <- args[1]
+ethnicity_pca_file <- args[1]
+ethnicity_desc_file <- args[1]
 
 # load ethnicity from json file
 d1 <- fromJSON(json_file)
@@ -49,31 +60,31 @@ pca[, "z"] <- pca[, "pos_PC3"]
 
 # generate plot
 plot_ly(
-	pca, x = ~x, y = ~y, z = ~z, type = "scatter3d", mode = "markers", 
-	color= ~pop_long, colors = colours, 
-	showlegend = FALSE, size = ~sizes, marker = list(symbol = 'circle', sizemode = 'diameter'), 
+	pca, x = ~x, y = ~y, z = ~z, type = "scatter3d", mode = "markers",
+	color= ~pop_long, colors = colours,
+	showlegend = FALSE, size = ~sizes, marker = list(symbol = 'circle', sizemode = 'diameter'),
 	sizes = c(4, 10), hoverinfo = 'text',  text = pca[, "pop_long"]
 ) %>%
 	layout(
-	    title = '', 
+	    title = '',
 	    scene = list(
 	        xaxis = list(
-	            title = "PC1", 
-	            gridcolor = 'rgb(255, 255, 255)', 
+	            title = "PC1",
+	            gridcolor = 'rgb(255, 255, 255)',
 	            gridwidth = 2
-	        ), 
+	        ),
 	        yaxis = list(
-	            title = "PC2", 
-	            gridcolor = 'rgb(255, 255, 255)', 
+	            title = "PC2",
+	            gridcolor = 'rgb(255, 255, 255)',
 	            gridwith = 2
-	        ), 
+	        ),
 	        zaxis = list(
-	            title = "PC3", 
-	            gridcolor = 'rgb(255, 255, 255)', 
+	            title = "PC3",
+	            gridcolor = 'rgb(255, 255, 255)',
 	            gridwith = 2
 	        )
-	    ), 
-	    paper_bgcolor = 'rgb(243, 243, 243)', 
+	    ),
+	    paper_bgcolor = 'rgb(243, 243, 243)',
 	    plot_bgcolor = 'rgb(243, 243, 243)'
 	)
 
