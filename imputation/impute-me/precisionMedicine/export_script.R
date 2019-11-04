@@ -51,7 +51,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, functionFile, gtool
         output[[study]] <- list(
             disease = disease,
             drug = drug,
-            z_score = z_score,
+            GRS = z_score,
             percentage = percentage
         )
     }

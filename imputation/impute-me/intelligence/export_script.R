@@ -58,7 +58,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, functionFile, gtool
 
         # message
         textToReturn <- paste0("Ethnicity-corrected trait Z-score is ", signif(GRS_beta, 2))
-        textToReturn <- paste0(textToReturn, " This genetic risk score is higher than ", percentage, " % of the general population.")
+        textToReturn <- paste0(textToReturn, " This genetic risk score is higher than ", percentage, "% of the general population.")
         if (!is.na(percentage)) {
             if (percentage < 20){
                 textToReturn <- paste0(textToReturn, " This is a low score.")
