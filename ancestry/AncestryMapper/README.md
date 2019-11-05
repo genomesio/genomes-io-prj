@@ -2,7 +2,7 @@
 
 ## How-to
 1) Install R for [Linux](https://cran.r-project.org/bin/linux/), [Mac OS](https://cran.r-project.org/bin/macosx/) or [Windows](https://cran.r-project.org/bin/windows/base/)
-2) Get [plink](https://www.cog-genomics.org/plink/2.0/) from this website https://www.cog-genomics.org/plink/2.0/. *plink* will be used to convert e.g. VCF or 23andme format to tped format for *AncestryMaper*.
+2) Get [plink](https://www.cog-genomics.org/plink/1.9/) from this website https://www.cog-genomics.org/plink/1.9/. *plink* will be used to convert e.g. VCF or 23andme format to tped format for *AncestryMaper*.
 3) Set path to *plink* in `config.yml` file.
 4) Replace reduced reference data set by the complete data
    - Download full reference data set from http://bit.ly/1OUstDP
