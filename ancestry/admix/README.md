@@ -6,7 +6,7 @@
 pip install git+https://github.com/stevenliuyi/admix
 ```
 
-2) Get [plink](https://www.cog-genomics.org/plink/2.0/) from this website https://www.cog-genomics.org/plink/2.0/. *plink* will be used to convert e.g. VCF format into 23andme format for *admix*.
+2) Get [plink](https://www.cog-genomics.org/plink/1.9/) from this website https://www.cog-genomics.org/plink/1.9/. *plink* will be used to convert e.g. VCF format into 23andme format for *admix*.
 
 3) Set path to *plink* in `config.yml` file.
 4) Run `runAdmix.py` script to calculate ancestry composition
