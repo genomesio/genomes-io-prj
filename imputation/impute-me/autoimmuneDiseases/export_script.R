@@ -2,6 +2,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, functionFile, gtool
     if(!file.exists(outputDir)){
         stop("Did not find a user with this id")
     }
+	source(functionFile)
 
     SNPs_to_analyze_file <- paste0(moduleDir, "/autoimmuneDiseases/2016-05-21_SNPs_to_analyze_SOURCE.txt")
     means_file <- paste0(moduleDir, "/autoimmuneDiseases/2016-05-21_means.txt")

@@ -2,6 +2,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, functionFile, gtool
     if (!file.exists(outputDir)) {
         stop(paste("Did not find a output data with this id", uniqueID))
     }
+	source(functionFile)
 
     snps_file <- paste0(moduleDir, "/ukbiobank/2017-09-28_semi_curated_version_ukbiobank.rdata")
     trait_file <- paste0(moduleDir, "/ukbiobank/2017-09-28_trait_overoverview.rdata")

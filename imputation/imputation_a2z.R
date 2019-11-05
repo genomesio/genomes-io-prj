@@ -1,8 +1,7 @@
-pkgs <- c("openxlsx", "jsonlite")
+pkgs <- c("openxlsx", "jsonlite", "tools")
 newPkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(newPkgs)) install.packages(newPkgs, repos = "http://cran.us.r-project.org")
 lapply(pkgs, library, character.only = TRUE)
-library(tools)
 
 #' Arguments
 #' 1: input ID
@@ -60,4 +59,4 @@ summarize_imputation(runDir, uniqueID, destinationDir, gtool, plink)
 # step 3: get SNPs to analyze
 crawl_for_snps_to_analyze(uniqueID, impute_me, destinationDir)
 # step 4: export test results
-allResults <- run_export_script(uniqueID = uniqueID, modules = NULL, impute_me = impute_me, destinationDir = destinationDir, functionFile = file_path_as_absolute("imputation_fn.R"), gtool = gtool)
+allResults <- run_export_script(uniqueID = uniqueID, modules = NULL, impute_me = impute_me, destinationDir = destinationDir, functionFile = tools::file_path_as_absolute("imputation_fn.R"), gtool = gtool)

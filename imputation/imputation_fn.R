@@ -708,7 +708,7 @@ run_export_script <- function (
 	# check if ethnicity is in pData, and if not save it there (because it is needed elsewhere)
 	if (!"ethnicity" %in% colnames(pData)) {
 		source(paste(paste0(impute_me, "/ethnicity" , "/export_script.R")))
-		ethnicity <- try(export_function(uniqueID))
+		ethnicity <- try(export_function(uniqueID, impute_me, destinationDir, functionFile, gtool))
 		if (class(ethnicity) == "try-error") {
 			ethnicity <- NA
 		} else {
@@ -736,7 +736,7 @@ run_export_script <- function (
 			if (!exists("export_function")) stop(paste("In module", module, "there was an export_script.R without an export_function"))
 			# exp <- try(export_function(uniqueID))
 			exp <- try(export_function(uniqueID, impute_me, destinationDir, functionFile, gtool))
-			
+
 			if (class(exp) == "try-error") next
 			outputList[[module]] <- exp
 			module_count <- module_count + 1
@@ -780,19 +780,19 @@ get_GRS <- function(genotypes, betas){
     if (!all(unique(sub("[0-9].+$" ,"" ,rownames(genotypes))) %in% c("i", "rs"))) {
         stop(paste("genotypes must have rownames starting with rs. You had these:", paste(unique(sub("[0-9].+$", "", rownames(genotypes))), collapse = ", ")))
     }
-    
+
     if (class(betas) != "data.frame") stop(paste("genotypes must be data.frame, not", class(betas)))
     necessary_columns <- c("effect_allele", "non_effect_allele", "Beta")
     if (!all(necessary_columns %in% colnames(betas))) stop(paste("betas must have a column", paste(necessary_columns, collapse = ", ")))
     if (!all(unique(sub("[0-9].+$" ,"" ,rownames(betas))) %in% c("i", "rs")))stop("betas must have rownames starting with rs")
     if (!all(rownames(betas) %in% rownames(genotypes))) stop("all SNPs in betas must be present in genotypes")
-    
+
     geneticRiskScore <- 0
     for (snp in rownames(betas)) {
         genotype <- strsplit(genotypes[snp,], "/")[[1]]
         effect_allele <- betas[snp,"effect_allele"]
         non_effect_allele <- betas[snp,"non_effect_allele"]
-        beta <- betas[snp, "Beta"]	
+        beta <- betas[snp, "Beta"]
         geneticRiskScore <- geneticRiskScore + sum(genotype %in% effect_allele) * beta
     }
     return(geneticRiskScore)
@@ -802,7 +802,7 @@ get_GRS_2 <- function(snp_data, mean_scale = TRUE, unit_variance = TRUE, verbose
     # snp_data  a data frame with genotype, effect sizes and information on effect/non-effect allele. Optionally also information about minor allele frequency and minor/major allele (for use with mean scaling etc)
     # mean_scale  logical. If TRUE the GRS output is scaled so that the average person, by MAF-information, will have a score of 0
     # unit_variance logical. If TRUE the GRS output is scaled so that 68% of everyone, by MAF/HWE-information, are within 1 unit of 0 (=1 SD)
-    
+
     if (class(snp_data) != "data.frame") stop(paste("snp_data must be data.frame, not", class(snp_data)))
     if ("Beta" %in% colnames(snp_data) & !"effect_size" %in% colnames(snp_data)) {
         warning("No 'effect_size' column was found, as is necessary per 2017-03-14 - but a 'Beta' column was renamed to 'effect_size'. Do fix in the future")
@@ -814,22 +814,22 @@ get_GRS_2 <- function(snp_data, mean_scale = TRUE, unit_variance = TRUE, verbose
     }
     if (!all(unique(sub("[0-9].+$", "", rownames(snp_data))) %in% c("i", "rs"))) stop("snp_data must have rownames starting with rs")
     if (class(snp_data[, "effect_size"])!="numeric") stop("Class of the effect_size column in the snp_data object must be numeric")
-    
-    
+
+
     if (class(mean_scale)!="logical") stop(paste("mean_scale must be logical, not", class(mean_scale)))
     if (length(mean_scale)!=1) stop(paste("mean_scale must be length 1"))
     if (mean_scale) {
         necessary_columns_2 <- c("minor_allele", "major_allele", "minor_allele_freq")
         if (!all(necessary_columns_2 %in% colnames(snp_data))) stop(paste("in mean-scaling, snp_data must have columns", paste(necessary_columns_2, collapse=", ")))
     }
-    
+
     if (class(unit_variance)!="logical") stop(paste("unit_variance must be logical, not", class(unit_variance)))
     if (length(unit_variance)!=1) stop(paste("unit_variance must be length 1"))
     if (!mean_scale & unit_variance) stop("Cannot use unit_variance if not also using mean_scale")
-    
+
     if (class(verbose)!="logical") stop(paste("verbose must be logical, not", class(verbose)))
     if (length(verbose)!=1) stop(paste("verbose must be length 1"))
-    
+
     snp_data[, "personal_score"] <- NA
     snp_data[, "population_score_average"] <- NA
     snp_data[, "population_score_sd"] <- NA
@@ -837,53 +837,53 @@ get_GRS_2 <- function(snp_data, mean_scale = TRUE, unit_variance = TRUE, verbose
     missing_snps <- vector()
     missing_major_minor_snps <- vector()
     missing_effect_info_snps <- vector()
-    
+
     for (snp in rownames(snp_data)) {
         # check for missing genotype
         if (is.na(snp_data[snp, "genotype"])) {
-            missing_snps <- c(snp, missing_snps) 
+            missing_snps <- c(snp, missing_snps)
             next
         }
-        
+
         # get effect/non-effect-alleles and genotypes
         genotype <- strsplit(snp_data[snp, "genotype"], "/")[[1]]
         effect_allele <- snp_data[snp, "effect_allele"]
         non_effect_allele <- snp_data[snp, "non_effect_allele"]
-        
+
         # check if the effect allele info is missing
         if (any(is.na(c(effect_allele, non_effect_allele))) | any(c(effect_allele, non_effect_allele) %in% "?")) {
             missing_effect_info_snps <- c(missing_effect_info_snps, snp)
             next
         }
-        
+
         # check if the genotype is part of these
         if (!all(genotype %in% c(effect_allele, non_effect_allele))) {
             missing_effect_info_snps <- c(missing_effect_info_snps, snp)
             next
         }
-        
-        # get effect_size  
-        effect_size <- snp_data[snp, "effect_size"]	
+
+        # get effect_size
+        effect_size <- snp_data[snp, "effect_size"]
         if (is.na(effect_size)) {
             missing_effect_info_snps <- c(missing_effect_info_snps, snp)
             next
         }
         personal_effect_allele_count <- sum(genotype %in% effect_allele)
         snp_data[snp, "personal_score"] <- personal_effect_allele_count * effect_size
-        
-        # if mean scale, then also calculate the average score in this population (based on MAF) 
+
+        # if mean scale, then also calculate the average score in this population (based on MAF)
         if (mean_scale) {
             # get major/minor/maf info
             major_allele <- snp_data[snp, "major_allele"]
             minor_allele <- snp_data[snp, "minor_allele"]
             minor_allele_freq <- snp_data[snp, "minor_allele_freq"]
-            
+
             # check if they are missing
             if (is.na(major_allele) | is.na(minor_allele) | is.na(minor_allele_freq) | minor_allele=="?" | major_allele=="?") {
-                missing_major_minor_snps <- c(snp, missing_major_minor_snps) 
+                missing_major_minor_snps <- c(snp, missing_major_minor_snps)
                 next
             }
-            
+
             # check if major-minor and effect-non-effect are consistent, and get effect_allele_freq
             if (minor_allele == effect_allele & major_allele == non_effect_allele) {
                 effect_allele_freq <- minor_allele_freq
@@ -892,12 +892,12 @@ get_GRS_2 <- function(snp_data, mean_scale = TRUE, unit_variance = TRUE, verbose
             } else {
                 stop(paste("discrepancy between effect/non-effect allele and major/minor allele for SNP", snp))
             }
-            
+
             # Calculate what the average score is for this population and also the difference with personal score
             average_effect_allele_count <- effect_allele_freq * 2
             snp_data[snp, "population_score_average"] <- average_effect_allele_count * effect_size
             snp_data[snp, "score_diff"] <- snp_data[snp, "personal_score"] - snp_data[snp, "population_score_average"]
-            
+
             # calculate the extent of possible variance of the score
             # in other words -- Z-scores. The population mean will always be zero... but now we can ensure that 68% (1 SD) is within "1" and 95% (2 SD) is within "2"...
             if (unit_variance) {
@@ -905,28 +905,28 @@ get_GRS_2 <- function(snp_data, mean_scale = TRUE, unit_variance = TRUE, verbose
                 frac_1 <- (1-effect_allele_freq)*(effect_allele_freq)*2
                 frac_2 <- (effect_allele_freq)^2
                 mean <- (frac_1 * 1 * effect_size + frac_2 * 2 * effect_size)
-                sigma <- (0*effect_size - mean)^2 * frac_0 + (1*effect_size - mean)^2 * frac_1 + (2*effect_size - mean)^2 * frac_2 
+                sigma <- (0*effect_size - mean)^2 * frac_0 + (1*effect_size - mean)^2 * frac_1 + (2*effect_size - mean)^2 * frac_2
                 population_sd <- ( sigma)^0.5
                 snp_data[snp, "population_score_sd"] <- population_sd
             }
-        }  
-    }  
-    
+        }
+    }
+
     # round values
     for (col in c("personal_score", "population_score_average", "population_score_sd", "score_diff")) {
         snp_data[, col] <- signif (snp_data[, col], 2)
     }
-    
-    # follow up on the warning message 
+
+    # follow up on the warning message
     if (length(missing_snps) > 0 & verbose) {
         warning(paste("Note, for", length(missing_snps), "SNPs, we found missing genotypes. This can cause errors particularly if the data is not mean centered. These were skipped:", paste(missing_snps, collapse=", ")))
     }
     if (length(missing_major_minor_snps) > 0 & verbose) {
-        warning(paste("Note, for", length(missing_major_minor_snps), "SNPs, we found missing major/minor/freq-allele information. These SNPs were skipped:", paste(missing_major_minor_snps, collapse=", ")))  
+        warning(paste("Note, for", length(missing_major_minor_snps), "SNPs, we found missing major/minor/freq-allele information. These SNPs were skipped:", paste(missing_major_minor_snps, collapse=", ")))
     }
     if (length(missing_effect_info_snps) > 0 & verbose) {
         warning(paste("Note, for", length(missing_effect_info_snps), "SNPs, we found wrong or missing information on what was effect-allele and what was non-effect-allele. They were skipped:", paste(missing_effect_info_snps, collapse=", ")))
-        
+
     }
     return(snp_data)
 }
