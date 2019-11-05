@@ -22,7 +22,7 @@ def main(argv):
 	try:
 		opts, args = getopt.getopt(argv,"i:t:o:h",["in", "type", "out", "help"])
 	except getopt.GetoptError:
-		print('runAncestryMapper.py -i input.vcf -t vcf -o output')
+		print('runAncestryMapper.py -i input.vcf -t vcf -o output.json')
 		sys.exit(2)
 
 	for opt,arg in opts:
@@ -70,7 +70,7 @@ def main(argv):
 	renameAmid = 'mv AMid*.amid %s.amid' % (output)
 	subprocess_cmd((mapperCMD, removeTMP, removeTMP, renameAmid))
 
-	print('Finished! Check output %s_ethnic_dist.txt, %s_region_dist.txt, %s.pdf and %s.amid' % (output, output, output, output))
+	print('Finished! Check output %s.json and %s.amid' % (output, output))
 
 if __name__ == "__main__":
 	if len(sys.argv[1:]) == 0:

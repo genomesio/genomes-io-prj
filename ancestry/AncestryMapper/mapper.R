@@ -1,4 +1,4 @@
-pkgs <- c("reshape2", "stringr", "AncestryMapper")
+pkgs <- c("reshape2", "stringr", "AncestryMapper", "jsonlite")
 newPkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(newPkgs)) install.packages(newPkgs, repos = "http://cran.us.r-project.org")
 lapply(pkgs, library, character.only = TRUE)
@@ -92,29 +92,50 @@ genetic.distance <- calculateAMidsArith(
 # )
 
 # plot
-pdf(paste0(args[2], ".pdf"), 8, 3)
-plotAMids(AMids = genetic.distance, phenoFile = Corpheno, columnPlot = 'I')
-dev.off()
+# pdf(paste0(args[2], ".pdf"), 8, 3)
+# plotAMids(AMids = genetic.distance, phenoFile = Corpheno, columnPlot = 'I')
+# dev.off()
 
 # get region distribution
 region <- regionDist(genetic.distance, Corpheno)
-write.table(
-    region,
-    file = paste0(args[2], "_region_dist.txt"),
-    row.names = FALSE,
-    sep = "\t",
-    quote = FALSE
-)
+# write.table(
+#     region,
+#     file = paste0(args[2], "_region_dist.txt"),
+#     row.names = FALSE,
+#     sep = "\t",
+#     quote = FALSE
+# )
 
 # get population distribution
 pop <- popDist(genetic.distance)
-write.table(
-    pop,
-    file = paste0(args[2], "_ethnic_dist.txt"),
-    row.names = FALSE,
-    sep = "\t",
-    quote = FALSE
+# write.table(
+#     pop,
+#     file = paste0(args[2], "_ethnic_dist.txt"),
+#     row.names = FALSE,
+#     sep = "\t",
+#     quote = FALSE
+# )
+
+# write output to json file
+regionList <- lapply(
+    seq_len(nrow(region)),
+    function (x) as.list(region[x, ])
 )
+
+popList <- lapply(
+    seq_len(nrow(pop)),
+    function (x) as.list(pop[x, ])
+)
+
+outList <- list()
+outList[["region"]] <- regionList
+outList[["ethnic"]] <- popList
+
+JSON <- toJSON(outList)
+outName <- paste0(args[2], ".json")
+f <- file(outName, "w")
+writeLines(JSON, f)
+close(f)
 
 msg <- paste0("NOTE: remember to change MinMaxFreq.rds back to MinMaxFreq.rda ",
               "when AncestryMapper has a new release")

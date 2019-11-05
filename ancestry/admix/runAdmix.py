@@ -4,6 +4,7 @@ import sys
 import subprocess
 import os
 import yaml
+import json
 
 def load_config(config_file):
     with open(config_file, 'r') as stream:
@@ -11,6 +12,28 @@ def load_config(config_file):
             return yaml.safe_load(stream)
         except yaml.YAMLError as exc:
             print(exc)
+
+def convert_to_json(inFile):
+	outDict = { "model" : "composition" }
+	key = ""
+	value = ""
+	with open(inFile) as fp:
+		for line in fp:
+			str = line.rstrip()
+			if len(str) > 0:
+				if str.find(':') < 0:
+					key = str
+				else:
+					if len(key) > 0:
+						if key in outDict:
+							outDict[key] += "; " + str
+						else:
+							outDict[key] = str
+	return(outDict)
+
+def subprocess_cmd(commands):
+	for cmd in commands:
+		subprocess.call(cmd, shell = True)
 
 def main(argv):
 	input = ''
@@ -49,7 +72,15 @@ def main(argv):
 		admixCMD = 'admix -f %s -v 23andme -o %s' % (input, output)
 
 	subprocess.call(admixCMD, shell = True)
-	print('Finished! Check output %s.txt' % (output))
+	jsonOut = convert_to_json(output)
+	jsonFile = output + ".json"
+	with open(jsonFile, 'w') as fp:
+		json.dump(jsonOut, fp)
+	mvCMD = 'mv %s tmp' % (output)
+	rmCMD = 'rm -rf tmp'
+	subprocess_cmd((mvCMD, rmCMD))
+
+	print('Finished! Check output %s.json' % (output))
 
 if __name__ == "__main__":
 	if len(sys.argv[1:]) == 0:
