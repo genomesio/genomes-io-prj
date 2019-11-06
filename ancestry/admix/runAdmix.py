@@ -29,6 +29,7 @@ def convert_to_json(inFile):
 							outDict[key] += "; " + str
 						else:
 							outDict[key] = str
+	del outDict['model']
 	return(outDict)
 
 def subprocess_cmd(commands):
@@ -38,19 +39,24 @@ def subprocess_cmd(commands):
 def main(argv):
 	input = ''
 	type = '23andme'
-	output = 'output.txt'
+	output = 'output'
+	model = 'K47'
 	try:
-		opts, args = getopt.getopt(argv,"i:t:o:h",["in", "type", "out", "help"])
+		opts, args = getopt.getopt(argv,"i:t:m:o:h",["in", "type", "model", "out", "help"])
 	except getopt.GetoptError:
-		print('runAdmix.py -i input.vcf -t vcf -o output.txt')
+		print('runAdmix.py -i input.vcf -t vcf -m K47 -o output')
 		sys.exit(2)
 
 	for opt,arg in opts:
 		if opt in ('-h','--help'):
 			print('runAdmix.py -i <input file> -t <input type> -o <output file>')
-			print('Input types: ')
+			print('Input types (default = 23andme):')
 			print('\tvcf (require plink for recoding!)')
 			print('\t23andme')
+			print('Model: please choose one of the following options (default = K47)')
+			print('\tall, K7b, K12b, globe13, globe10, world9, Eurasia7, Africa9, weac2, E11, K36,')
+			print('\tEUtest13, Jtest14, HarappaWorld, TurkicK11, KurdishK10, AncientNearEast13, K7AMI,')
+			print('\tK8AMI, MDLPK27, puntDNAL, K47, K7M1, K13M2, K14M1, K18M4, K25R1, MichalK25')
 			sys.exit()
 		elif opt in ('-i','--in'):
 			input = arg
@@ -58,34 +64,60 @@ def main(argv):
 			type = arg
 		elif opt in ('-o','--out'):
 			output = arg
+		elif opt in ('-m','--model'):
+			model = arg
 
 	cfg = load_config('config.yml')
 
+	allModels = ["all", "K7b", "K12b", "globe13", "globe10", "world9", "Eurasia7", "Africa9", "weac2", "E11", "K36", "EUtest13", "Jtest14", "HarappaWorld", "TurkicK11", "KurdishK10", "AncientNearEast13", "K7AMI", "K8AMI", "MDLPK27", "puntDNAL", "K47", "K7M1", "K13M2", "K14M1", "K18M4", "K25R1", "MichalK25"]
+	if model not in allModels:
+		print('Model: Invalid model given. Please choose one of the following options')
+		print('\tall, K7b, K12b, globe13, globe10, world9, Eurasia7, Africa9, weac2, E11, K36,')
+		print('\tEUtest13, Jtest14, HarappaWorld, TurkicK11, KurdishK10, AncientNearEast13, K7AMI,')
+		print('\tK8AMI, MDLPK27, puntDNAL, K47, K7M1, K13M2, K14M1, K18M4, K25R1, MichalK25')
+		exit()
+
+	if not os.path.exists('tmp'):
+		os.makedirs('tmp')
 	if type == "vcf":
 		print('Convert VCF to 23andme...')
-		if not os.path.exists('tmp'):
-			os.makedirs('tmp')
 		plinkCMD = '%s --vcf %s --snps-only --recode 23 --out tmp/tmp.23andme' % (cfg['plink'], input)
 		subprocess.run(plinkCMD, shell = True)
+		# admixCMD = 'admix -f %s -v 23andme -o %s' % ("tmp/tmp.23andme.txt", output)
+	elif type == "23andme":
+		print('Copy input to tmp folder...')
+		cpCMD = 'cp %s tmp/tmp.23andme.txt' % (input)
+		subprocess.call(cpCMD, shell = True)
+		# admixCMD = 'admix -f %s -v 23andme -o %s' % (input, output)
+	else:
+		print('Invalid input types given. Accepted input types:')
+		print('\tvcf')
+		print('\t23andme')
+		exit()
+
+	# run admix
+	if model == "all":
 		admixCMD = 'admix -f %s -v 23andme -o %s' % ("tmp/tmp.23andme.txt", output)
 	else:
-		admixCMD = 'admix -f %s -v 23andme -o %s' % (input, output)
-
+		admixCMD = 'admix -f %s -v 23andme -m %s -o %s' % ("tmp/tmp.23andme.txt", model, output)
 	subprocess.call(admixCMD, shell = True)
+
+	# print output
 	jsonOut = convert_to_json(output)
+	# if model != "all":
+	# 	jsonOut = jsonOut[model]
 	jsonFile = output + ".json"
 	with open(jsonFile, 'w') as fp:
 		json.dump(jsonOut, fp)
 	mvCMD = 'mv %s tmp' % (output)
 	rmCMD = 'rm -rf tmp'
 	subprocess_cmd((mvCMD, rmCMD))
-
 	print('Finished! Check output %s.json' % (output))
 
 if __name__ == "__main__":
 	if len(sys.argv[1:]) == 0:
 		print('Missing input!')
-		print('runAdmix.py -i input.vcf -t vcf -o output.txt')
+		print('runAdmix.py -i input.vcf -t vcf -m K74 -o output.txt')
 		sys.exit(2)
 	else:
 		main(sys.argv[1:])

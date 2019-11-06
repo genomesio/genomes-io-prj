@@ -68,7 +68,7 @@ def main(argv):
 	removeTMP = 'rm -rf tmp'
 	removeReport = 'rm report_*'
 	renameAmid = 'mv AMid*.amid %s.amid' % (output)
-	subprocess_cmd((mapperCMD, removeTMP, removeTMP, renameAmid))
+	subprocess_cmd((mapperCMD, removeTMP, removeReport, renameAmid))
 
 	print('Finished! Check output %s.json and %s.amid' % (output, output))
 
