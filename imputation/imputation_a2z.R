@@ -66,4 +66,4 @@ if (mode == "full") {
 }
 
 # step 4: export test results
-allResults <- run_export_script(uniqueID = uniqueID, modules = NULL, impute_me = impute_me, destinationDir = destinationDir, functionFile = tools::file_path_as_absolute("imputation_fn.R"), gtool = gtool)
+allResults <- run_export_script(uniqueID = uniqueID, modules = NULL, impute_me = impute_me, destinationDir = destinationDir, gtool = gtool)

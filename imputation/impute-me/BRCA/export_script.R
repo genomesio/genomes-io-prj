@@ -1,8 +1,7 @@
-export_function <- function (uniqueID, moduleDir, outputDir, functionFile, gtool) {
+export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
     if (!file.exists(outputDir)) {
         stop(paste("Did not find a output data with this id", uniqueID))
     }
-	# source(functionFile)
 
     BRCA_table_file <- paste0(moduleDir, "/BRCA/SNPs_to_analyze.txt")
     BRCA_table <- read.table(BRCA_table_file, sep = "\t", header = TRUE, stringsAsFactors = FALSE)

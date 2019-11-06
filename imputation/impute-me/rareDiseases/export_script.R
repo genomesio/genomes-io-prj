@@ -1,8 +1,7 @@
-export_function <- function (uniqueID, moduleDir, outputDir, functionFile, gtool) {
+export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
     if (!file.exists(outputDir)) {
         stop(paste("Did not find a output data with this id", uniqueID))
     }
-	# source(functionFile)
 
     table_file <- paste0(moduleDir, "/rareDiseases/SNPs_to_analyze.txt")
     request <- table <- read.table(table_file, sep = "\t", header = TRUE, stringsAsFactors = FALSE, comment.char = "", quote = "")
