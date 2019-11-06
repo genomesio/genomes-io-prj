@@ -2,7 +2,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, functionFile, gtool
     if (!file.exists(outputDir)) {
         stop(paste("Did not find a output data with this id", uniqueID))
     }
-	source(functionFile)
+	# source(functionFile)
 
     output <- list()
     #############
