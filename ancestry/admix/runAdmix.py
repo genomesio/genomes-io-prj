@@ -81,19 +81,23 @@ def main(argv):
 		os.makedirs('tmp')
 	if type == "vcf":
 		print('Convert VCF to 23andme...')
-		plinkCMD = '%s --vcf %s --snps-only --recode 23 --out tmp/tmp.23andme' % (cfg['plink'], input)
-		subprocess.run(plinkCMD, shell = True)
-		# admixCMD = 'admix -f %s -v 23andme -o %s' % ("tmp/tmp.23andme.txt", output)
+		removeContig = 'grep "^[#,1:22,X,Y,(MT)]" %s > tmp/tmp.vcf' % (input)
+		plinkCMD = '%s --vcf tmp/tmp.vcf --snps-only --recode 23 --out tmp/tmp.23andme' % (cfg['plink'])
+		subprocess_cmd((removeContig, plinkCMD))
 	elif type == "23andme":
 		print('Copy input to tmp folder...')
 		cpCMD = 'cp %s tmp/tmp.23andme.txt' % (input)
 		subprocess.call(cpCMD, shell = True)
-		# admixCMD = 'admix -f %s -v 23andme -o %s' % (input, output)
 	else:
 		print('Invalid input types given. Accepted input types:')
 		print('\tvcf')
 		print('\t23andme')
 		exit()
+
+	# remove unidentified SNPs
+	removeSNP = 'awk \'$2 != \".\"\' tmp/tmp.23andme.txt > tmp/tmp.23andme.txt.mod'
+	replaceCMD = 'mv tmp/tmp.23andme.txt.mod tmp/tmp.23andme.txt'
+	subprocess_cmd((removeSNP, replaceCMD))
 
 	# run admix
 	if model == "all":
@@ -104,8 +108,6 @@ def main(argv):
 
 	# print output
 	jsonOut = convert_to_json(output)
-	# if model != "all":
-	# 	jsonOut = jsonOut[model]
 	jsonFile = output + ".json"
 	with open(jsonFile, 'w') as fp:
 		json.dump(jsonOut, fp)

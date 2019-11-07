@@ -45,7 +45,8 @@ def main(argv):
 
 	if type == "vcf":
 		print('Convert VCF to tped...')
-		plinkCMD = '%s --vcf %s --recode transpose --out tmp/input' % (cfg['plink'], input)
+		removeContig = 'grep "^[#,1:22,X,Y,(MT)]" %s > tmp/tmp.vcf' % (input)
+		plinkCMD = '%s --vcf tmp/tmp.vcf --recode transpose --out tmp/input' % (cfg['plink'])
 		subprocess.run(plinkCMD, shell = True)
 	elif type == "23andme":
 		print('Convert 23andme to tped...')
