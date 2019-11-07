@@ -11,16 +11,16 @@
    - Copy the provided `MinMaxFreq.rda` to the same folder above `AncestryMaper/data/`
 5) Run `runAncestryMapper.py` script to calculate ancestry composition
 ```
-python runAncestryMapper.py -i ../example.23andme.txt -t 23andme -o output
+python runAncestryMapper.py -i ../../exmple_input/example.23andme.txt -t 23andme -o output
 ```
 or
 ```
-python runAncestryMapper.py -i ../example.vcf -t vcf -o output
+python runAncestryMapper.py -i ../../exmple_input/example.vcf -t vcf -o output
 ```
 
 ## Input and Output
 ### Input
-Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)).
+Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/example_input)).
 
 ### Output
 The python script will give 3 output files:

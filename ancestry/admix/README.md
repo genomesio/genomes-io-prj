@@ -11,11 +11,11 @@ pip install git+https://github.com/stevenliuyi/admix
 3) Set path to *plink* in `config.yml` file.
 4) Run `runAdmix.py` script to calculate ancestry composition
 ```
-python runAdmix.py -i example.vcf -t vcf -m K47 -o output
+python runAdmix.py -i ../../example_input/example.vcf -t vcf -m K47 -o output
 ```
 or
 ```
-python runAdmix.py -i example.23andme.txt -t 23andme -m K47 -o output
+python runAdmix.py -i ../../example_input/example.23andme.txt -t 23andme -m K47 -o output
 ```
 or
 ```
@@ -25,7 +25,7 @@ for parameter description :)
 
 ## Input and Output
 ### Input
-Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)).
+Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/example_input)).
 
 ### Output
 Output is a [JSON file](https://github.com/trvinh/genomes-io-prj/blob/master/ancestry/admix/example/output.json) showing the ancestry composition predicted using all available reference data (admixture models) in *Admix*. For general usage, one should use the results based on Dodecad's global models (global13, global10 or world9) or HarappaWorld.
