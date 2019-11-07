@@ -63,8 +63,10 @@ def main(argv):
 
 		if type == 'vcf':
 			print('Convert VCF to 23andme...')
-			plinkCMD = '%s --vcf %s --snps-only --recode 23 --out imputation/%s' % (cfg['plink'], input, rawInput)
-			subprocess.run(plinkCMD, shell = True)
+			removeContig = 'grep "^[#,1:22,X,Y,(MT)]" %s > imputation/tmp.vcf' % (input)
+			plinkCMD = '%s --vcf imputation/tmp.vcf --snps-only --recode 23 --out imputation/%s' % (cfg['plink'], rawInput)
+			removeVCF = 'rm imputation/tmp.vcf'
+			subprocess_cmd((removeContig, plinkCMD, removeVCF))
 		elif type == '23andme':
 			cpCMD = 'cp %s imputation/%s\.txt' % (input, rawInput)
 			subprocess.run(cpCMD, shell = True)
