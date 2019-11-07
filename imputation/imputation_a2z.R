@@ -48,19 +48,18 @@ sample_ref <- args[9]
 imputeDataDir <- args[10]
 impute_me <- args[11]
 
-# check imputation dir
-if (!file.exists(paste0(runDir, "/", uniqueID, "_raw_data.txt"))) {
-    stop(paste("No raw input file found in", runDir))
-}
-
 # MAIN
 source("imputation_fn.R")
 
 if (mode == "full") {
+    # check imputation dir
+    if (!file.exists(paste0(runDir, "/", uniqueID, "_raw_data.txt"))) {
+        stop(paste("No raw input file found in", runDir))
+    }
     # step 1: run imputation
-    run_imputation(runDir, shapeit, plink, impute2, imputeDataDir, sample_ref)
+    startTime <- run_imputation(runDir, shapeit, plink, impute2, imputeDataDir, sample_ref)
     # step 2: summarize imputation results
-    summarize_imputation(runDir, uniqueID, destinationDir, gtool, plink)
+    summarize_imputation(runDir, uniqueID, destinationDir, gtool, plink, startTime)
     # step 3: get SNPs to analyze
     crawl_for_snps_to_analyze(uniqueID, impute_me, destinationDir)
 }

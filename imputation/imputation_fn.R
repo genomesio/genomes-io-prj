@@ -14,7 +14,6 @@ run_imputation <- function (
 	if (length(grep("/$", runDir)) != 0) stop("Please don't use a trailing slash in the runDir")
 
 	# load and check variables.rdata and raw_data
-	# load(paste(runDir, "/variables.rdata", sep=""))
 	rawdata <- paste(runDir, "/", uniqueID, "_raw_data.txt", sep="")
 
 	if (class(rawdata) != "character") stop(paste("rawdata must be character, not", class(rawdata)))
@@ -48,6 +47,7 @@ run_imputation <- function (
 	}
 
 	# print start message
+	timeStamp <- format(Sys.time(), "%Y-%m-%d-%H-%M")
 	cat(paste0(Sys.time(), "\nStarting imputation\n"))
 	setwd(runDir)
 
@@ -198,6 +198,7 @@ run_imputation <- function (
 			}
 		}
 	}
+	return(timeStamp)
 }
 
 #' Summarize imputation
@@ -206,7 +207,8 @@ summarize_imputation<-function(
 	uniqueID = NULL,
 	destinationDir = NULL,
 	gtool = NULL,
-	plink = NULL
+	plink = NULL,
+	startTime = NULL
 ) {
 	# check paths
 	if (class(runDir) != "character") stop(paste("runDir must be character, not", class(runDir)))
@@ -354,7 +356,6 @@ summarize_imputation<-function(
 	}
 
 	##### move summarized files into destination folder
-	# prepDestinationDir <- paste(destinationDir, "/", uniqueID, sep = "")
 	prepDestinationDir <- destinationDir
 	if (!file.exists(prepDestinationDir)) dir.create(prepDestinationDir)
 
@@ -392,20 +393,12 @@ summarize_imputation<-function(
 	}
 
 	# create the pData file
-	# load(paste0(runDir, "/variables.rdata"))
-	# if (!exists("should_be_imputed")) should_be_imputed  <- NA
-	# if (!exists("imputemany_upload")) imputemany_upload  <- NA
-	# if (!exists("upload_time")) upload_time <- NA
-
 	timeStamp <- format(Sys.time(), "%Y-%m-%d-%H-%M")
-	# md5sum <- md5sum(paste(uniqueID, "_raw_data.txt", sep = ""))
 	gender <- system(paste("cut --delimiter=\" \" -f 6 ", runDir, "/step_4_chr22.sample", sep = ""), intern = TRUE)[3]
 
 	f <- file(paste0(prepDestinationDir, "/pData.txt"), "w")
-	# writeLines(paste(c("uniqueID", "filename", "email", "first_timeStamp", "md5sum", "gender", "protect_from_deletion", "should_be_imputed", "imputemany_upload", "upload_time"), collapse="\t"), f)
-	# writeLines(paste(c(uniqueID, file, email, timeStamp, md5sum, gender, protect_from_deletion, should_be_imputed, imputemany_upload, upload_time), collapse="\t"), f)
-	writeLines(paste(c("uniqueID", "first_timeStamp", "gender"), collapse = "\t"), f)
-	writeLines(paste(c(uniqueID, timeStamp, gender), collapse = "\t"), f)
+	writeLines(paste(c("uniqueID", "first_timeStamp", "gender", "endImputation_time"), collapse = "\t"), f)
+	writeLines(paste(c(uniqueID, startTime, gender, timeStamp), collapse = "\t"), f)
 	close(f)
 }
 
@@ -761,6 +754,12 @@ run_export_script <- function (
 	f <- file(filename, "w")
 	writeLines(JSON, f)
 	close(f)
+	
+	# print final end time to pData
+	timeStamp <- format(Sys.time(), "%Y-%m-%d-%H-%M")
+	pData[1, "final_timeStamp"] <- timeStamp
+	write.table(pData, file = pDataFile, sep = "\t", col.names = TRUE, row.names = FALSE, quote = FALSE)
+	
 	return(outputList)
 }
 
