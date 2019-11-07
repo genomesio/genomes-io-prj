@@ -662,7 +662,7 @@ crawl_for_snps_to_analyze <- function (uniqueID = NULL, impute_me = NULL, destin
 
 #' run_export scripts
 run_export_script <- function (
-    uniqueID = NULL, modules = NULL, impute_me = NULL, destinationDir = NULL, functionFile = NULL, gtool = NULL
+    uniqueID = NULL, modules = NULL, impute_me = NULL, destinationDir = NULL, gtool = NULL
 ) {
 	require(jsonlite) # for toJSON function
 
@@ -708,7 +708,7 @@ run_export_script <- function (
 	# check if ethnicity is in pData, and if not save it there (because it is needed elsewhere)
 	if (!"ethnicity" %in% colnames(pData)) {
 		source(paste(paste0(impute_me, "/ethnicity" , "/export_script.R")))
-		ethnicity <- try(export_function(uniqueID, impute_me, destinationDir, functionFile, gtool))
+		ethnicity <- try(export_function(uniqueID, impute_me, destinationDir, gtool))
 		if (class(ethnicity) == "try-error") {
 			ethnicity <- NA
 		} else {
@@ -735,7 +735,7 @@ run_export_script <- function (
 			source(paste(paste0(impute_me, "/", module, "/export_script.R")))
 			if (!exists("export_function")) stop(paste("In module", module, "there was an export_script.R without an export_function"))
 			# exp <- try(export_function(uniqueID))
-			exp <- try(export_function(uniqueID, impute_me, destinationDir, functionFile, gtool))
+			exp <- try(export_function(uniqueID, impute_me, destinationDir, gtool))
 
 			if (class(exp) == "try-error") next
 			outputList[[module]] <- exp
