@@ -6,7 +6,7 @@ Ancestry test is done based on 2 approaches: [admix](https://github.com/stevenli
 
 **admix** calculates the `ancestry composition` (e.g. 48.08% North European, 17.77% Mediterranean, 10.21% East African, etc.) for input genome based on different public [admixture models](https://en.wikipedia.org/wiki/Genetic_admixture). The algorithm is based on the maximum likelihood estimation.
 
-**AncestryMapper** estimates the similarity of the input genome to several reference ethnic groups by computing the `genetic distances` based on the [Principal component analysis (PCA) procedure](https://en.wikipedia.org/wiki/Principal_component_analysis). This apporach will not give the ancestry composition as the output like *admix*, but a sorted list from the most similar ethnic group to the most distance one together with the calculated genetic distances.
+**AncestryMapper** estimates the similarity of the input genome to several reference ethnic groups by computing the `genetic distances` based on the [Principal component analysis (PCA) procedure](https://en.wikipedia.org/wiki/Principal_component_analysis). This apporach will not give the ancestry composition as the output like *admix*, but a sorted list from the most similar ethnic group to the most distance one together with the calculated genetic distances.
 
 ## Genetic testing based on imputation
 
