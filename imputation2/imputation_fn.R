@@ -586,7 +586,7 @@ get_genotypes <- function (
 }
 
 #' Get SNPs for analyzing
-crawl_for_snps_to_analyze <- function (uniqueID = NULL, impute_me = NULL, destinationDir = NULL) {
+crawl_for_snps_to_analyze <- function (uniqueID = NULL, imputeTrails = NULL, destinationDir = NULL) {
 	if (class(uniqueID) != "character") stop("uniqueID must be of class character")
 
 	# print start message
@@ -594,7 +594,7 @@ crawl_for_snps_to_analyze <- function (uniqueID = NULL, impute_me = NULL, destin
 
 	# get list of SNPs to analyze
 	all_SNPs <- data.frame(SNP = vector(), chr_name = vector(), stringsAsFactors = FALSE)
-	for (module in list.files(impute_me, full.names = TRUE)) {
+	for (module in list.files(imputeTrails, full.names = TRUE)) {
 		if (!file.info(module)["isdir"]) next
 		if ("SNPs_to_analyze.txt" %in% list.files(module)) {
 			SNPs_to_analyze <- read.table(
@@ -630,15 +630,15 @@ crawl_for_snps_to_analyze <- function (uniqueID = NULL, impute_me = NULL, destin
 	genotypes <- try(get_genotypes(uniqueID = uniqueID, request = all_SNPs, gtool = gtool, destinationDir = destinationDir))
 
 	# get the nonsenser SNPs if possible
-	e <- try(load(paste0(impute_me, "/nonsenser/2015-12-16_all_coding_SNPs.rdata")))
+	e <- try(load(paste0(imputeTrails, "/nonsenser/2015-12-16_all_coding_SNPs.rdata")))
 	if (class(e) != "try-error") {
 		genotypes <- try(get_genotypes(uniqueID, coding_snps, gtool = gtool, destinationDir = destinationDir, namingLabel = "cached.nonsenser"))
 	}
 
 	# get the AllDiseases + ukbiobank SNPs if possible
-	load(paste0(impute_me, "/AllDiseases/2019-03-04_all_gwas_snps.rdata"))
+	load(paste0(imputeTrails, "/AllDiseases/2019-03-04_all_gwas_snps.rdata"))
 	e1 <- gwas_snps
-	load(paste0(impute_me, "/ukbiobank/2017-09-28_all_ukbiobank_snps.rdata"))
+	load(paste0(imputeTrails, "/ukbiobank/2017-09-28_all_ukbiobank_snps.rdata"))
 	e2 <- gwas_snps
 	e2 <- e2[!rownames(e2) %in% rownames(e1), ]
 	e <- rbind(e1, e2)
@@ -647,7 +647,7 @@ crawl_for_snps_to_analyze <- function (uniqueID = NULL, impute_me = NULL, destin
 	}
 
 	# get the ethnicity SNPs if possible
-	e <- try(load(paste0(impute_me, "/ethnicity/2017-04-03_ethnicity_snps.rdata")))
+	e <- try(load(paste0(imputeTrails, "/ethnicity/2017-04-03_ethnicity_snps.rdata")))
 	if (class(e) != "try-error") {
 		genotypes <- try(get_genotypes(uniqueID, ethnicity_snps, gtool = gtool, destinationDir = destinationDir, namingLabel = "cached.ethnicity"))
 	}
@@ -655,7 +655,7 @@ crawl_for_snps_to_analyze <- function (uniqueID = NULL, impute_me = NULL, destin
 
 #' run_export scripts
 run_export_script <- function (
-    uniqueID = NULL, modules = NULL, impute_me = NULL, destinationDir = NULL, gtool = NULL
+    uniqueID = NULL, modules = NULL, imputeTrails = NULL, destinationDir = NULL, gtool = NULL
 ) {
 	require(jsonlite) # for toJSON function
 
@@ -667,10 +667,10 @@ run_export_script <- function (
 	if (!all(file.exists(destinationDir))) stop("Given output folder was not found")
 
 	if (is.null(modules)) {
-		modules <- list.files(impute_me)
+		modules <- list.files(imputeTrails)
 	} else {
 		if (class(modules) != "character") stop("modules must be of class character")
-		if (!all(file.exists(paste(impute_me, "/", modules, sep = "")))) stop ("Not all modules given were found")
+		if (!all(file.exists(paste(imputeTrails, "/", modules, sep = "")))) stop ("Not all modules given were found")
 	}
 
 	print(paste("Running export script for", uniqueID))
@@ -700,8 +700,8 @@ run_export_script <- function (
 
 	# check if ethnicity is in pData, and if not save it there (because it is needed elsewhere)
 	if (!"ethnicity" %in% colnames(pData)) {
-		source(paste(paste0(impute_me, "/ethnicity" , "/export_script.R")))
-		ethnicity <- try(export_function(uniqueID, impute_me, destinationDir, gtool))
+		source(paste(paste0(imputeTrails, "/ethnicity" , "/export_script.R")))
+		ethnicity <- try(export_function(uniqueID, imputeTrails, destinationDir, gtool))
 		if (class(ethnicity) == "try-error") {
 			ethnicity <- NA
 		} else {
@@ -721,14 +721,14 @@ run_export_script <- function (
 	# get remaining non-ethnicity modules
 	module_count <- 0
 	for (module in modules) {
-		if (!file.info(paste0(impute_me, "/", module))["isdir"]) next
-		if ("export_script.R" %in% list.files(paste0(impute_me, "/", module))) {
+		if (!file.info(paste0(imputeTrails, "/", module))["isdir"]) next
+		if ("export_script.R" %in% list.files(paste0(imputeTrails, "/", module))) {
 			print(paste(Sys.time(), "Running module", module, "for", uniqueID))
 			if (exists("export_function")) suppressWarnings(rm("export_function"))
-			source(paste(paste0(impute_me, "/", module, "/export_script.R")))
+			source(paste(paste0(imputeTrails, "/", module, "/export_script.R")))
 			if (!exists("export_function")) stop(paste("In module", module, "there was an export_script.R without an export_function"))
 			# exp <- try(export_function(uniqueID))
-			exp <- try(export_function(uniqueID, impute_me, destinationDir, gtool))
+			exp <- try(export_function(uniqueID, imputeTrails, destinationDir, gtool))
 
 			if (class(exp) == "try-error") next
 			outputList[[module]] <- exp

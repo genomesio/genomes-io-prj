@@ -105,7 +105,7 @@ def main(argv):
 		sys.exit()
 
 	# do imputation and testing
-	imputeCMD = 'Rscript imputation_a2z.R %s %s %s %s %s %s %s %s %s %s %s' % (mode, uniqueID, runDir, outputDir, cfg['shapeit'], cfg['plink'], cfg['gtool'], cfg['impute2'], cfg['sample_ref'], cfg['imputeDataDir'], cfg['impute_me'])
+	imputeCMD = 'Rscript imputation_a2z.R %s %s %s %s %s %s %s %s %s %s %s' % (mode, uniqueID, runDir, outputDir, cfg['shapeit'], cfg['plink'], cfg['gtool'], cfg['impute2'], cfg['sample_ref'], cfg['imputeDataDir'], cfg['imputeTrails'])
 	subprocess.run(imputeCMD, shell = True)
 	print('Finished! Check outputs in %s folder.' % (outputDir))
 
