@@ -21,7 +21,9 @@ ancestry/admix/.DS_Store
 ancestry/admix/tmp/
 ancestry/admix/output.txt
 ancestry/AncestryMaper/.DS_Store
-imputation/config.yml
+imputation2/config.yml
+imputation2/impute_tools/*
+imputation2/output/*
 
 .renviron
 .Rproj.user
