@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Get imputation reference data and related programs
-mkdir impute_dir
-cd impute_dir
+mkdir impute_tools
+cd impute_tools
 
 # Get impute2
 wget https://mathgen.stats.ox.ac.uk/impute/impute_v2.3.2_x86_64_static.tgz
