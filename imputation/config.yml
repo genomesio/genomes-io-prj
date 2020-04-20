@@ -1,7 +1,0 @@
-imputeDataDir: "impute_dir" # folder contains ALL_1000G_phase1integrated_v3_impute
-sample_ref: "impute_dir/ALL_1000G_phase1integrated_v3_impute/ALL_1000G_phase1integrated_v3.sample"
-impute_me: "impute-me" # source folder of impute_me, where all test modules can be found
-plink: "impute_dir/plink/plink"
-shapeit: "impute_dir/shapeit/shapeit"
-impute2: "impute_dir/impute_v2.3.2_x86_64_static/impute2"
-gtool: "impute_dir/gtool"
