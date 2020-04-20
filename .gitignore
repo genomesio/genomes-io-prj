@@ -21,9 +21,10 @@ ancestry/admix/.DS_Store
 ancestry/admix/tmp/
 ancestry/admix/output.txt
 ancestry/AncestryMaper/.DS_Store
-imputation2/config.yml
+imputation2/config.yml  # untrack by "git update-index --assume-unchanged config.yml"; redo by "git update-index --no-assume-unchanged config.yml"
 imputation2/impute_tools/*
 imputation2/output/*
+imputation2/imputation/*
 
 .renviron
 .Rproj.user
