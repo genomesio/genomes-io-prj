@@ -8,7 +8,7 @@ Ancestry test is done based on 2 approaches: [admix](https://github.com/stevenli
 
 **AncestryMapper** estimates the similarity of the input genome to several reference ethnic groups by computing the `genetic distances` based on the [Principal component analysis (PCA) procedure](https://en.wikipedia.org/wiki/Principal_component_analysis). This apporach will not give the ancestry composition as the output like *admix*, but a sorted list from the most similar ethnic group to the most distance one together with the calculated genetic distances.
 
-## Genetic testing based on imputation
+## Genetic testing based on imputation (updated)
 
 ([Definition from wiki](https://en.wikipedia.org/wiki/Imputation_(genetics)): Imputation in genetics refers to the statistic reference of unobserved genotypes. It is achieved by using known haplotypes in a population, for instance from the HapMap or the 1000 Genomes Project in humans, thereby allowing to test for association between a trait of interest (e.g. a disease) and experimentally untyped genetic variants, but whose genotypes have been statistically inferred ("imputed"). Genotype imputation is usually performed on SNP, the most common kind of genetic variation.)
 
