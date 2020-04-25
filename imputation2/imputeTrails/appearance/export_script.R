@@ -13,7 +13,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
     gender <- read.table(pDataFile, header = TRUE, stringsAsFactors = FALSE, sep = "\t")[1, "gender"]
 
     # get the current best predictor SNPs
-    giant_sup_path <- paste0(moduleDir, "/guessMyHeight/SNPs_to_analyze.txt")
+    giant_sup_path <- paste0(moduleDir, "/appearance/SNPs_to_analyze_height.txt")
     giant_sup <- read.table(giant_sup_path, sep = "\t", header = TRUE, stringsAsFactors = FALSE, row.names = 1)
 
     # get genotypes and calculate gheight
@@ -46,7 +46,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
     #############
 
     #get the gColour
-    GRS_file_name <- paste0(moduleDir, "/hairColour/SNPs_to_analyze.txt")
+    GRS_file_name <- paste0(moduleDir, "/appearance/SNPs_to_analyze_hairColour.txt")
     GRS_file <- read.table(GRS_file_name, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
     for (component in c("blonde", "red")) {
         s1 <- GRS_file[GRS_file[, "Category"] %in% component, ]
