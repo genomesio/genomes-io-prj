@@ -30,7 +30,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
         }
 
         rownames(d2) <- d2[, "SNP"]
-        d3 <- try(get_GRS_2(d2, mean_scale = T, unit_variance = T, verbose = FALSE))
+        d3 <- try(get_GRS_2(d2, mean_scale = TRUE, unit_variance = TRUE, verbose = FALSE))
 
         if (class(d3) == "try-error") {
             z_score <- "Not calculated"

@@ -727,33 +727,16 @@ run_export_script <- function (
 			if (exists("export_function")) suppressWarnings(rm("export_function"))
 			source(paste(paste0(imputeTrails, "/", module, "/export_script.R")))
 			if (!exists("export_function")) stop(paste("In module", module, "there was an export_script.R without an export_function"))
-			# exp <- try(export_function(uniqueID))
 			exp <- try(export_function(uniqueID, imputeTrails, destinationDir, gtool))
 
 			if (class(exp) == "try-error") next
 			outputList[[module]] <- exp
 			module_count <- module_count + 1
+			print_to_json(uniqueID, destinationDir, module, exp)
 		}
 	}
-
-	filename <- paste0(destinationDir, "/", paste(uniqueID, "output.json", sep = "_"))
-
-	# check if there exists previous json file, with module data that is not re-run
-	# if so, include this
-	if (file.exists(filename)) {
-		outputList_previous <- fromJSON(filename)
-		previous_unique <- outputList_previous[!names(outputList_previous) %in% names(outputList)]
-		if (length(previous_unique) > 0) {
-			print(paste("Inserting", length(previous_unique), "modules from existing json:", paste(names(previous_unique), collapse = ", ")))
-			outputList <- c(outputList, previous_unique)
-		}
-	}
-
-	# save new JSON
-	JSON <- toJSON(outputList, digits = NA)
-	f <- file(filename, "w")
-	writeLines(JSON, f)
-	close(f)
+	
+	print_to_json(uniqueID, destinationDir, "ALL", outputList)
 	
 	# print final end time to pData
 	timeStamp <- format(Sys.time(), "%Y-%m-%d-%H-%M")
@@ -929,4 +912,25 @@ get_GRS_2 <- function(snp_data, mean_scale = TRUE, unit_variance = TRUE, verbose
 
     }
     return(snp_data)
+}
+
+print_to_json <- function(uniqueID, destinationDir, moduleName, outputList) {
+    filename <- paste0(destinationDir, "/", paste0(uniqueID, "_", moduleName, ".json"))
+    
+    # check if there exists previous json file, with module data that is not re-run
+    # if so, include this
+    if (file.exists(filename)) {
+        outputList_previous <- fromJSON(filename)
+        previous_unique <- outputList_previous[!names(outputList_previous) %in% names(outputList)]
+        if (length(previous_unique) > 0) {
+            print(paste("Inserting", length(previous_unique), "modules from existing json:", paste(names(previous_unique), collapse = ", ")))
+            outputList <- c(outputList, previous_unique)
+        }
+    }
+    
+    # save new JSON
+    JSON <- toJSON(outputList, digits = NA)
+    f <- file(filename, "w")
+    writeLines(JSON, f)
+    close(f)
 }
