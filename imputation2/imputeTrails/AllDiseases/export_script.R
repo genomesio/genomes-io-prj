@@ -44,6 +44,7 @@ export_function <- function(uniqueID, moduleDir, outputDir, gtool) {
         snp_data <- get_GRS_2(snp_data, mean_scale = TRUE, unit_variance = TRUE, verbose = FALSE)
         population_sum_sd <- sqrt(sum(snp_data[, "population_score_sd"]^2, na.rm = TRUE))
         GRS_beta <- sum(snp_data[, "score_diff"], na.rm = TRUE) / population_sum_sd
+
         # calculate percentage
         percentage <- floor(pnorm(GRS_beta, mean = 0, sd = 1)*100)
         # calculate risk-allele

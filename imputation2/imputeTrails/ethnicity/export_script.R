@@ -42,8 +42,8 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
     pca[, "distance"] <- sqrt((pca[, "pos_PC1"] - pca[y, "pos_PC1"])^2 + (pca[, "pos_PC2"] - pca[y, "pos_PC2"])^2 + (pca[, "pos_PC3"] - pca[y, "pos_PC3"])^2)
     pca <- pca[order(pca[, "distance"]), ]
     guessed_super_pop <- unique(pca[2:6, "super_pop"])
-    if(length(guessed_super_pop)!= 1)guessed_super_pop <- NA # if there's more than one superpop among closest 5 - then we don't want to guess
-    if(found < 1500)guessed_super_pop <- NA # also don't guess if too many SNPs were missing
+    if (length(guessed_super_pop)!= 1) guessed_super_pop <- NA # if there's more than one superpop among closest 5 - then we don't want to guess
+    if (found < 1500) guessed_super_pop <- NA # also don't guess if too many SNPs were missing
     output[["guessed_super_pop"]] <- guessed_super_pop
 
     # adding in some coordinates to the JSON

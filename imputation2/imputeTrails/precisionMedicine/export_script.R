@@ -20,7 +20,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
     SNPs_to_analyze[, "genotype"] <- SNPs_to_retrieve[SNPs_to_analyze[, "SNP"], "genotype"]
 
     for (study in unique(SNPs_to_analyze[, "PMID"])) {
-        d2 <- SNPs_to_analyze[SNPs_to_analyze[, "PMID"]%in%study, ]
+        d2 <- SNPs_to_analyze[SNPs_to_analyze[, "PMID"] %in% study, ]
         disease <- unique(d2[, "disease"])
         drug <- unique(d2[, "drug"])
 

@@ -38,7 +38,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
 
         } else {
             population_sum_sd <- sqrt(sum(d3[, "population_score_sd"]^2, na.rm = TRUE))
-            if (population_sum_sd == 0){
+            if (population_sum_sd == 0) {
                 z_score <- "Not calculated"
                 percentage <- "Not calculated"
             } else {
@@ -49,13 +49,12 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
             }
         }
 
-        output[[study]] <-
-            list(
-                disease = disease,
-                drug = drug,
-                GRS = z_score,
-                percentage = percentage
-            )
+        output[[study]] <- list(
+            disease = disease,
+            drug = drug,
+            GRS = z_score,
+            percentage = percentage
+        )
     }
     return(output)
 }

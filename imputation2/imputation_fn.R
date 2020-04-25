@@ -655,7 +655,7 @@ crawl_for_snps_to_analyze <- function (uniqueID = NULL, imputeTrails = NULL, des
 
 #' run_export scripts
 run_export_script <- function (
-    uniqueID = NULL, modules = NULL, imputeTrails = NULL, destinationDir = NULL, gtool = NULL
+    uniqueID = NULL, modules = "all", imputeTrails = NULL, destinationDir = NULL, gtool = NULL
 ) {
 	require(jsonlite) # for toJSON function
 
@@ -666,7 +666,7 @@ run_export_script <- function (
 	print(destinationDir)
 	if (!all(file.exists(destinationDir))) stop("Given output folder was not found")
 
-	if (is.null(modules)) {
+	if (modules == 'all') {
 		modules <- list.files(imputeTrails)
 	} else {
 		if (class(modules) != "character") stop("modules must be of class character")
@@ -736,7 +736,7 @@ run_export_script <- function (
 		}
 	}
 
-	filename <- paste0(destinationDir, "/", paste(uniqueID, "data.json", sep = "_"))
+	filename <- paste0(destinationDir, "/", paste(uniqueID, "output.json", sep = "_"))
 
 	# check if there exists previous json file, with module data that is not re-run
 	# if so, include this
@@ -750,7 +750,7 @@ run_export_script <- function (
 	}
 
 	# save new JSON
-	JSON <- toJSON(outputList)
+	JSON <- toJSON(outputList, digits = NA)
 	f <- file(filename, "w")
 	writeLines(JSON, f)
 	close(f)
@@ -774,6 +774,7 @@ genes_for_good_cleaner <- function (rawdata_file) {
 
 get_GRS <- function(genotypes, betas){
     # this function is deprecated --- use get_GRS_2 instead
+    # still be used for autoimmuneDiseases and guessMyHeights
     if (class(genotypes) != "data.frame") stop(paste("genotypes must be data.frame, not", class(genotypes)))
     if (!"genotype" %in% colnames(genotypes)) stop(paste("genotypes must have a column genotype"))
     if (!all(unique(sub("[0-9].+$" ,"" ,rownames(genotypes))) %in% c("i", "rs"))) {

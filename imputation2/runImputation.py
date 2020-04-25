@@ -44,7 +44,7 @@ def process_input(args):
 
 def prepare_dir(args):
     (infile, mode, jobID, type, plink) = args
-    if mode == 'full':
+    if mode == 'full' or mode == 'impute':
         try:
             my_abs_path = Path('imputation').resolve(strict=True)
         except FileNotFoundError:
@@ -84,13 +84,15 @@ def main():
     optional = parser.add_argument_group('additional arguments')
     required.add_argument('-i', '--infile', help='Input file in vcf or 23andme format', action='store', default='', required=True)
     required.add_argument('-t', '--type', help='Type of input (vcf|23andme)', action='store', choices=['vcf', '23andme'], default='', required=True)
-    optional.add_argument('-m', '--mode', help='Run mode (full|test). Full will run both imputation and perform genetic testing.'
+    optional.add_argument('-m', '--mode', help='Run mode (full|impute|test). Full will run both imputation and perform genetic testing.'
                                         'Test mode will run only the tests based on pre-computed imputation data. Default: full',
-                                        choices=['full', 'test'], action='store', default='full')
+                                        choices=['full', 'impute', 'test'], action='store', default='full')
     optional.add_argument('-n', '--id', help='Job ID. If not given, a random string will be generated.', action='store', default='')
+    optional.add_argument('--trail', help='Trail names for report. If not set, all available trails will be reported.', action='store', default='all')
     args = parser.parse_args()
 
     # get arguments and config paths
+    cfg = load_config('config.yml')
     type = args.type
     mode = args.mode
     infile = args.infile
@@ -98,12 +100,13 @@ def main():
     jobID = args.id
     if (jobID == ''):
         jobID = 'id_' + randomStringDigits(9)
-
-    cfg = load_config('config.yml')
+    trail = args.trail
+    if not trail == "all":
+        checkFileExist(cfg['imputeTrails'] + "/" + trail)
 
 	# do imputation
     (runDir, outputDir) = prepare_dir([infile, mode, jobID, type, cfg['plink']])
-    imputeCMD = 'Rscript imputation_a2z.R %s %s %s %s %s %s %s %s %s %s %s' % (mode, jobID, runDir, outputDir, cfg['shapeit'], cfg['plink'], cfg['gtool'], cfg['impute2'], cfg['sample_ref'], cfg['imputeDataDir'], cfg['imputeTrails'])
+    imputeCMD = 'Rscript imputation_a2z.R %s %s %s %s %s %s %s %s %s %s %s %s' % (trail, mode, jobID, runDir, outputDir, cfg['shapeit'], cfg['plink'], cfg['gtool'], cfg['impute2'], cfg['sample_ref'], cfg['imputeDataDir'], cfg['imputeTrails'])
     # print(imputeCMD)
     subprocess.run(imputeCMD, shell = True)
     print('Finished! Check outputs in %s folder.' % (outputDir))

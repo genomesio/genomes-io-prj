@@ -61,7 +61,6 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
 
     blond_calibrate <- function(x) {max(c(0, min(c(1, (x+1)/6))))}
     red_calibrate <- function(x) {max(c(0, min(c(1, (x+1)/5))))}
-
     blondeness <- blond_calibrate(gColour_blonde)
     redheadness <- red_calibrate(gColour_red)
 
