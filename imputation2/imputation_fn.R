@@ -915,7 +915,8 @@ get_GRS_2 <- function(snp_data, mean_scale = TRUE, unit_variance = TRUE, verbose
 }
 
 print_to_json <- function(uniqueID, destinationDir, moduleName, outputList) {
-    filename <- paste0(destinationDir, "/", paste0(uniqueID, "_", moduleName, ".json"))
+    suppressWarnings(dir.create(file.path(destinationDir, "json_out")))
+    filename <- paste0(destinationDir, "/json_out/", paste0(uniqueID, "_", moduleName, ".json"))
     
     # check if there exists previous json file, with module data that is not re-run
     # if so, include this
