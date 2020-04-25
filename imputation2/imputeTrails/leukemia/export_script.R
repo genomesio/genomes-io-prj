@@ -1,6 +1,3 @@
-
-
-
 export_function <- function(uniqueID, moduleDir, outputDir, gtool) {
     if (!file.exists(outputDir)) {
         stop(paste("Did not find a output data with this id", uniqueID))
