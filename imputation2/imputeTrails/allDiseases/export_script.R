@@ -4,9 +4,9 @@ export_function <- function(uniqueID, moduleDir, outputDir, gtool) {
     }
 
     library(openxlsx)
-    snps_file <- paste0(moduleDir, "/AllDiseases/2019-03-04_semi_curated_version_gwas_central.rdata")
+    snps_file <- paste0(moduleDir, "/allDiseases/2019-03-04_semi_curated_version_gwas_central.rdata")
     load(snps_file)
-    trait_file <- paste0(moduleDir, "/AllDiseases/2019-03-04_trait_overview.xlsx")
+    trait_file <- paste0(moduleDir, "/allDiseases/2019-03-04_trait_overview.xlsx")
     traits <- read.xlsx(trait_file, rowNames = TRUE)
     traits <- traits[!is.na(traits[, "omit"]) & !traits[, "omit"], ]
     all_snp_trait_file <- paste0(moduleDir, "/prs/2019-03-05_study_list.xlsx")
@@ -14,8 +14,8 @@ export_function <- function(uniqueID, moduleDir, outputDir, gtool) {
 
     output <- list()
     # output[["documentation"]] <- list()
-    # output[["documentation"]][["trait_overview"]] <- "https://github.com/lassefolkersen/impute-me/blob/589f332a148e7c0f6041637bd1c97ec0de1a14ee/AllDiseases/2019-03-04_trait_overview.xlsx"
-    # output[["documentation"]][["snp_file"]] <- "https://github.com/lassefolkersen/impute-me/blob/589f332a148e7c0f6041637bd1c97ec0de1a14ee/AllDiseases/2019-03-04_semi_curated_version_gwas_central.rdata"
+    # output[["documentation"]][["trait_overview"]] <- "https://github.com/lassefolkersen/impute-me/blob/589f332a148e7c0f6041637bd1c97ec0de1a14ee/allDiseases/2019-03-04_trait_overview.xlsx"
+    # output[["documentation"]][["snp_file"]] <- "https://github.com/lassefolkersen/impute-me/blob/589f332a148e7c0f6041637bd1c97ec0de1a14ee/allDiseases/2019-03-04_semi_curated_version_gwas_central.rdata"
 
     # get ethnicity parameter
     pDataFile <- paste(outputDir, "/pData.txt", sep = "")

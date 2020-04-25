@@ -736,7 +736,7 @@ run_export_script <- function (
 		}
 	}
 	
-	print_to_json(uniqueID, destinationDir, "ALL", outputList)
+	print_to_json(uniqueID, destinationDir, "ALL_TRAILS", outputList)
 	
 	# print final end time to pData
 	timeStamp <- format(Sys.time(), "%Y-%m-%d-%H-%M")
