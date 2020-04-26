@@ -9,11 +9,11 @@ This imputation module is created based on the source code of [impute.me](https:
 5) Set absolute paths to the reference data, tools and imputation modules in the `config.yml` file.
 6) Run `runImputation.py` script to do the genetic imputation and tests
 ```
-python runImputation.py -i ../example.23andme.txt -t 23andme
+python runImputation.py -i ../example.23andme.txt -t 23andme [-i job_id] -o impute_output
 ```
 or
 ```
-python runAncestryMapper.py -i ../example.vcf -t vcf
+python runAncestryMapper.py -i ../example.vcf -t vcf [-i job_id] -o impute_output
 ```
 
 ## Input and Output
@@ -21,11 +21,11 @@ python runAncestryMapper.py -i ../example.vcf -t vcf
 Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)).
 
 ### Output
-The `runImputation.py` will generate a job ID each time it's called.
+The `runImputation.py` will generate a random job ID each time it's called if `--id` not given.
 
-The **imputation result** will stored in the `imputation` folder, located in the same folder, where the script is called. A summaried result is saved separately in the `output/job_id` folder.
+The **imputation result** will stored in the `imputation/job_id` folder. Genetic testing results are saved separately in the `output/job_id` folder.
 
-Based on the output in the `imputation` folder, several **genetic tests** will be performed. Each test has its own reference SNP data and script saved in the corresponding subfolder within the `impute-me` folder. The test's result is stored in `output/job_id/job_id_data.json`. See [example](https://github.com/trvinh/genomes-io-prj/blob/master/imputation/example/id_PujIkrvTG_data.json).
+Based on the output in the `imputation` folder, several **genetic tests** will be performed. Each test has its own reference SNP data and script saved in the corresponding subfolder within the `imputeTraits` folder. The test's result is stored in `output/job_id/json_out/` folder. See [example](https://github.com/trvinh/genomes-io-prj/blob/master/imputation/example/).
 
 ## Genetic tests
 
