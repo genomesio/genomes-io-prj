@@ -15,7 +15,7 @@ library(tools)
 #' 8: impute2
 #' 9: sample_ref
 #' 10: imputation reference data dir
-#' 11: impute-functions dir
+#' 11: impute-trait dir
 
 args = commandArgs(trailingOnly = TRUE)
 if (length(args) < 10) {
@@ -32,7 +32,7 @@ if (length(args) < 10) {
         "9: path to impute2",
         "10: path to sample_ref",
         "11: path to imputation reference data",
-		"12: path to the impute-functions tool"
+		"12: path to the impute-trait tool"
     )
     stop(paste0(msg, "\n"), call. = FALSE)
 }
@@ -48,7 +48,7 @@ gtool <- args[8]
 impute2 <- args[9]
 sample_ref <- args[10]
 imputeDataDir <- args[11]
-imputeTrails <- args[12]
+imputeTraits <- args[12]
 
 # MAIN
 source("imputation_fn.R")
@@ -63,7 +63,7 @@ if (mode == "full" || mode == "impute") {
     # step 2: summarize imputation results
     summarize_imputation(runDir, uniqueID, destinationDir, gtool, plink, startTime)
     # step 3: get SNPs to analyze
-    crawl_for_snps_to_analyze(uniqueID, imputeTrails, destinationDir)
+    crawl_for_snps_to_analyze(uniqueID, imputeTraits, destinationDir)
 }
 
 # step 4: export test results
@@ -71,9 +71,8 @@ if (mode == "full" || mode == "test") {
     allResults <- run_export_script(
         uniqueID = uniqueID, 
         modules = trails, 
-        imputeTrails = imputeTrails, 
+        imputeTraits = imputeTraits, 
         destinationDir = destinationDir, 
         gtool = gtool
     )
 }
-

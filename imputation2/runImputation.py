@@ -30,65 +30,55 @@ def subprocess_cmd(commands):
 		subprocess.call(cmd, shell = True)
 
 def process_input(args):
-    (infile, jobID, type, plink) = args
+    (infile, jobID, type, outPath, plink) = args
     rawInput = jobID + '_raw_data'
     if type == 'vcf':
         print('Convert VCF to 23andme...')
-        removeContig = 'grep "^[#,1:22,X,Y,(MT)]" %s > imputation/tmp.vcf' % (infile)
-        plinkCMD = '%s --vcf imputation/tmp.vcf --snps-only --recode 23 --out imputation/%s' % (plink, rawInput)
-        removeVCF = 'rm imputation/tmp.vcf'
-        subprocess_cmd((removeContig, plinkCMD, removeVCF))
+        removeContig = 'grep "^[#,1:22,X,Y,(MT)]" %s > %s/imputation/%s/tmp.vcf' % (infile, outPath, jobID)
+        plinkCMD = '%s --vcf %s/imputation/%s/tmp.vcf --snps-only --recode 23 --out %s/imputation/%s/plinkConverted' % (plink, outPath, jobID, outPath, jobID)
+        removeUnkSNP = 'awk \'$1 != \".\"\' %s/imputation/%s/plinkConverted.txt > %s/imputation/%s/plinkConverted.txt.mod' % (outPath, jobID, outPath, jobID)
+        replaceFile = 'mv %s/imputation/%s/plinkConverted.txt.mod %s/imputation/%s/%s.txt' % (outPath, jobID, outPath, jobID, rawInput)
+        removeTmpFiles = 'rm %s/imputation/%s/plinkConverted*' % (outPath, jobID)
+        removeVCF = 'rm %s/imputation/%s/tmp.vcf' % (outPath, jobID)
+        subprocess_cmd((removeContig, plinkCMD, removeUnkSNP, replaceFile, removeTmpFiles, removeVCF))
     elif type == '23andme':
-        cpCMD = 'cp %s imputation/%s\.txt' % (infile, rawInput)
+        cpCMD = 'cp %s %s/imputation/%s/%s\.txt' % (infile, outPath, jobID, rawInput)
         subprocess.run(cpCMD, shell = True)
 
 def prepare_dir(args):
-    (infile, mode, jobID, type, plink) = args
+    (infile, mode, jobID, type, outPath, plink) = args
     if mode == 'full' or mode == 'impute':
         try:
-            my_abs_path = Path('imputation').resolve(strict=True)
+            my_abs_path = Path(outPath + '/imputation/' + jobID).resolve(strict=True)
         except FileNotFoundError:
-            Path('imputation').mkdir(parents = True, exist_ok = True)
+            Path(outPath + '/imputation/' + jobID).mkdir(parents = True, exist_ok = True)
         # [convert format and] copy infile to imputation folder
-        process_input([infile, jobID, type, plink])
+        process_input([infile, jobID, type, outPath, plink])
         # prepare folders
-        runDir = os.getcwd() + '/imputation'
-        outputDir = os.getcwd() + '/output/' + jobID
+        runDir = outPath + '/imputation/' + jobID
+        outputDir = outPath + '/output/' + jobID
         Path(outputDir).mkdir(parents = True, exist_ok = True)
     elif mode == 'test':
         # get existing job ID
-        outputDirTmp = os.getcwd() + '/output'
+        outputDirTmp = outPath + '/output/' + jobID
         checkFileExist(outputDirTmp)
-        jobIDtmp = ''
-        subFolder = os.listdir(outputDirTmp)
-        if len(subFolder) < 1:
-            print('No output folder found! Please check again or run with full mode!')
-            sys.exit()
-        elif len(subFolder) > 1:
-            print('More than one output folders found:')
-            for i in range(len(subFolder)):
-                print (i + 1, end = " ")
-                print (subFolder[i])
-            jobIDtmp = input('Select one folder: ')
-            checkFileExist(outputDirTmp + "/" + jobIDtmp)
-        else:
-            jobIDtmp = subFolder[0]
-        runDir = os.getcwd() + '/imputation'
-        outputDir = os.getcwd() + '/output/' + jobIDtmp
+        runDir = outPath + '/imputation/' + jobID
+        outputDir = outPath + '/output/' + jobID
     return(runDir, outputDir)
 
 def main():
-    version = "1.0.1"
+    version = "1.0.2"
     parser = argparse.ArgumentParser(description="You are running runImputation.py version " + str(version) + ".")
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('additional arguments')
     required.add_argument('-i', '--infile', help='Input file in vcf or 23andme format', action='store', default='', required=True)
     required.add_argument('-t', '--type', help='Type of input (vcf|23andme)', action='store', choices=['vcf', '23andme'], default='', required=True)
+    required.add_argument('-o', '--outPath', help='Output folder', action='store', default='', required=True)
     optional.add_argument('-m', '--mode', help='Run mode (full|impute|test). Full will run both imputation and perform genetic testing.'
                                         'Test mode will run only the tests based on pre-computed imputation data. Default: full',
                                         choices=['full', 'impute', 'test'], action='store', default='full')
     optional.add_argument('-n', '--id', help='Job ID. If not given, a random string will be generated.', action='store', default='')
-    optional.add_argument('--trail', help='Trail names for report. If not set, all available trails will be reported.', action='store', default='all')
+    optional.add_argument('--trait', help='Trait names for report. If not set, all available traits will be reported.', action='store', default='all')
     args = parser.parse_args()
 
     # get arguments and config paths
@@ -97,16 +87,19 @@ def main():
     mode = args.mode
     infile = args.infile
     checkFileExist(infile)
+    outPath = args.outPath
     jobID = args.id
     if (jobID == ''):
         jobID = 'id_' + randomStringDigits(9)
-    trail = args.trail
-    if not trail == "all":
-        checkFileExist(cfg['imputeTrails'] + "/" + trail)
+    trait = args.trait
+    if not trait == "all":
+        checkFileExist(cfg['imputeTraits'] + "/" + trait)
+
+    scriptPath = os.path.abspath(os.path.dirname(sys.argv[0]))
 
 	# do imputation
-    (runDir, outputDir) = prepare_dir([infile, mode, jobID, type, cfg['plink']])
-    imputeCMD = 'Rscript imputation_a2z.R %s %s %s %s %s %s %s %s %s %s %s %s' % (trail, mode, jobID, runDir, outputDir, cfg['shapeit'], cfg['plink'], cfg['gtool'], cfg['impute2'], cfg['sample_ref'], cfg['imputeDataDir'], cfg['imputeTrails'])
+    (runDir, outputDir) = prepare_dir([infile, mode, jobID, type, outPath, cfg['plink']])
+    imputeCMD = 'Rscript %s/imputation_a2z.R %s %s %s %s %s %s %s %s %s %s %s %s' % (scriptPath, trait, mode, jobID, runDir, outputDir, cfg['shapeit'], cfg['plink'], cfg['gtool'], cfg['impute2'], cfg['sample_ref'], cfg['imputeDataDir'], cfg['imputeTraits'])
     # print(imputeCMD)
     subprocess.run(imputeCMD, shell = True)
     print('Finished! Check outputs in %s folder.' % (outputDir))
