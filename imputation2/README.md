@@ -4,25 +4,25 @@ This imputation module is created based on the source code of [impute.me](https:
 ## How-to
 1. Install R for [Linux](https://cran.r-project.org/bin/linux/), [Mac OS](https://cran.r-project.org/bin/macosx/) or [Windows](https://cran.r-project.org/bin/windows/base/)
 2. Clone this repository into your computer.
-3. Run `setup.sh` script to download reference data from 1000genomes and other tools for the imputation ([impute2](https://mathgen.stats.ox.ac.uk/impute/impute_v2.html), [shapeit](https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.html) and [gtool](https://www.well.ox.ac.uk/~cfreeman/software/gwas/gtool.html))
-4. Set absolute paths to the reference data, tools and imputation modules in the `config.yml` file.
+3. Run `setup.sh` script to download reference data from 1000genomes and other tools for the imputation ([plink1.9](https://www.cog-genomics.org/plink/1.9/), [impute2](https://mathgen.stats.ox.ac.uk/impute/impute_v2.html), [shapeit](https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.html) and [gtool](https://www.well.ox.ac.uk/~cfreeman/software/gwas/gtool.html))
+4. Check paths to the reference data, tools and imputation modules in the `config.yml` file.
 5. Run `runImputation.py` script to do the genetic imputation and tests
 ```
-python runImputation.py -i ../example.23andme.txt -t 23andme [-i job_id] -o impute_output
+python runImputation.py -i ../example.23andme.txt -t 23andme -o impute_output [-n job_id]
 ```
 
 ## Input and Output
 ### Input
 Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)). *Note: the example.vcf will not work with this imputation module!!! It has SNPs for chromosome 1 only.*
 
-VCF inputs need to be annotated with [rsIDs](https://www.ncbi.nlm.nih.gov/books/NBK44417/#Content.what_is_a_reference_snp_or__rs_i). You can annotate your genome using [this instruction](https://gist.github.com/trvinh/43a0e0724ee7330a45d0c7074f1c0e5f).
+VCF inputs need to be annotated with [rsIDs](https://www.ncbi.nlm.nih.gov/books/NBK44417/#Content.what_is_a_reference_snp_or__rs_i). You can annotate your genome using [this instruction](https://gist.github.com/trvinh/43a0e0724ee7330a45d0c7074f1c0e5f) if needed.
 
 ### Output
-The `runImputation.py` will generate a random job ID each time it's called if `--id` not given.
+The `runImputation.py` will generate a random job ID each time it's called if `-n/--id` not given.
 
-The **imputation result** will stored in the `imputation/job_id` folder. Genetic testing results are saved separately in the `output/job_id` folder.
+The **imputation result** will stored in the `imputation/job_id` folder.
 
-Based on the output in the `imputation` folder, several **genetic tests** will be performed. Each test has its own reference SNP data and script saved in the corresponding subfolder within the `imputeTraits` folder. The test's result is stored in `output/job_id/json_out/` folder. See [example](https://github.com/trvinh/genomes-io-prj/blob/master/imputation/example/).
+Based on the output in the `imputation` folder, several **genetic tests** will be performed. Each test has its own reference SNP data and script saved in the corresponding subfolder within the `imputeTraits` folder. **Genetic testing results** are saved separately in the `output/job_id` folder, where all output in json format can be found in `output/job_id/json_out/`. See [example](https://github.com/trvinh/genomes-io-prj/blob/master/imputation/example/).
 
 ## Genetic tests
 
@@ -54,4 +54,4 @@ The polygenic risk score is represented as the [Z-score](https://en.wikipedia.or
 
 An example of a *message* for the asthma test: *Ethnicity-corrected trait Z-score is -0.24. This genetic risk score is higher than 40% of the general population. This is a fairly average score. Result from the analysis of 59 SNPs from http://www.ncbi.nlm.nih.gov/pubmed/29273806 Demenais F et al (PMID 29273806), which were reported to be associated with asthma. This study reports a total sample size of 132486, as entered on date 2017-12-22.*
 
-*__Note__: The numbers in the IDs for the traits of tests number (1), (4), (7), and (8) are the NCBI pubmed IDs (for example: acute_insulin_response_28490609 will be referenced to https://www.ncbi.nlm.nih.gov/pubmed/28490609).*
+*__Note__: The numbers in the IDs for the traits (1), (4), (6), and (7) are the NCBI pubmed IDs (for example: acute_insulin_response_28490609 will be referenced to https://www.ncbi.nlm.nih.gov/pubmed/28490609).*
