@@ -2,6 +2,9 @@
 
 CURRENT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+# Install tabix for working with vcf.gz files
+sudo apt install tabix
+
 # Get imputation reference data and related programs
 mkdir "$CURRENT/impute_tools"
 cd "$CURRENT/impute_tools"

@@ -2,23 +2,20 @@
 This imputation module is created based on the source code of [impute.me](https://www.impute.me/). The original souce code can be found at https://github.com/lassefolkersen/impute-me
 
 ## How-to
-1) Install R for [Linux](https://cran.r-project.org/bin/linux/), [Mac OS](https://cran.r-project.org/bin/macosx/) or [Windows](https://cran.r-project.org/bin/windows/base/)
-2) Get [plink1.9](https://www.cog-genomics.org/plink/1.9/) from this website https://www.cog-genomics.org/plink/1.9/. *plink* will be used to convert e.g. VCF or 23andme format to tped format for *AncestryMaper*.
-3) Clone this repository into your computer.
-4) Run `setup.sh` script to download reference data from 1000genomes and other tools for the imputation ([impute2](https://mathgen.stats.ox.ac.uk/impute/impute_v2.html), [shapeit](https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.html) and [gtool](https://www.well.ox.ac.uk/~cfreeman/software/gwas/gtool.html))
-5) Set absolute paths to the reference data, tools and imputation modules in the `config.yml` file.
-6) Run `runImputation.py` script to do the genetic imputation and tests
+1. Install R for [Linux](https://cran.r-project.org/bin/linux/), [Mac OS](https://cran.r-project.org/bin/macosx/) or [Windows](https://cran.r-project.org/bin/windows/base/)
+
+~~2. Get [plink1.9](https://www.cog-genomics.org/plink/1.9/) from this website https://www.cog-genomics.org/plink/1.9/. *plink* will be used to convert e.g. VCF or 23andme format to tped format for *AncestryMaper*.~~
+3. Clone this repository into your computer.
+4. Run `setup.sh` script to download reference data from 1000genomes and other tools for the imputation ([impute2](https://mathgen.stats.ox.ac.uk/impute/impute_v2.html), [shapeit](https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.html) and [gtool](https://www.well.ox.ac.uk/~cfreeman/software/gwas/gtool.html))
+5. Set absolute paths to the reference data, tools and imputation modules in the `config.yml` file.
+6. Run `runImputation.py` script to do the genetic imputation and tests
 ```
 python runImputation.py -i ../example.23andme.txt -t 23andme [-i job_id] -o impute_output
-```
-or
-```
-python runAncestryMapper.py -i ../example.vcf -t vcf [-i job_id] -o impute_output
 ```
 
 ## Input and Output
 ### Input
-Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)).
+Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)). *Note: the example.vcf will not work with this imputation module!!! It has SNPs for chromosome 1 only.*
 
 ### Output
 The `runImputation.py` will generate a random job ID each time it's called if `--id` not given.

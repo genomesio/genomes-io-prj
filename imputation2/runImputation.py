@@ -29,18 +29,51 @@ def subprocess_cmd(commands):
 	for cmd in commands:
 		subprocess.call(cmd, shell = True)
 
+def check_vcf(vcfFile):
+    fileExt = vcfFile.split(".")[-1]
+    flag = 0
+    if fileExt == 'gz':
+        extractCmd = 'bgzip -dc %s > temp.vcf' % vcfFile
+        subprocess.call([extractCmd], shell = True)
+        vcfInput = 'temp.vcf'
+        flag = 1
+    else:
+        vcfInput = vcfFile
+    # check if vcf file already annotated
+    cmd = 'cut -f 3 %s | sort -u | grep "^rs"' % vcfInput
+    proc = subprocess.Popen([cmd], stdout = subprocess.PIPE, shell = True)
+    (out, err) = proc.communicate()
+    if len(out) == 0:
+        if fileExt == 'gz':
+            subprocess.call(['rm', 'temp.vcf'])
+        sys.exit('Input file need to be annotated!')
+    # check complete annotated chromosomes
+    cmd = 'sed "s/^chr//g" %s | awk \'$3 != \".\"\' | grep "^[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X]" | cut -f1 | sort -u | wc -l' % vcfInput
+    proc = subprocess.Popen([cmd], stdout = subprocess.PIPE, shell = True)
+    (out, err) = proc.communicate()
+    if not len(out) < 23:
+        flag = 3
+        if fileExt == 'gz':
+            subprocess.call(['rm', 'temp.vcf'])
+        sys.exit('Not all chromosomes are annotated!')
+
 def process_input(args):
     (infile, jobID, type, outPath, plink) = args
     rawInput = jobID + '_raw_data'
     if type == 'vcf':
+        print('Check VCF input...')
+        check_vcf(infile)
         print('Convert VCF to 23andme...')
-        removeContig = 'grep "^[#,1:22,X,Y,(MT)]" %s > %s/imputation/%s/tmp.vcf' % (infile, outPath, jobID)
-        plinkCMD = '%s --vcf %s/imputation/%s/tmp.vcf --snps-only --recode 23 --out %s/imputation/%s/plinkConverted' % (plink, outPath, jobID, outPath, jobID)
-        removeUnkSNP = 'awk \'$1 != \".\"\' %s/imputation/%s/plinkConverted.txt > %s/imputation/%s/plinkConverted.txt.mod' % (outPath, jobID, outPath, jobID)
-        replaceFile = 'mv %s/imputation/%s/plinkConverted.txt.mod %s/imputation/%s/%s.txt' % (outPath, jobID, outPath, jobID, rawInput)
-        removeTmpFiles = 'rm %s/imputation/%s/plinkConverted*' % (outPath, jobID)
-        removeVCF = 'rm %s/imputation/%s/tmp.vcf' % (outPath, jobID)
-        subprocess_cmd((removeContig, plinkCMD, removeUnkSNP, replaceFile, removeTmpFiles, removeVCF))
+        fileExt = infile.split(".")[-1]
+        if fileExt == 'gz':
+            extractCmd = 'bgzip -dc %s | sed "s/^chr//g" | awk \'$3 != \".\"\' | grep "^[#,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,(MT)]" > %s/imputation/%s/tmp.vcf' % (infile, outPath, jobID)
+            subprocess.call([extractCmd], shell = True)
+        else:
+            copyInput = 'sed "s/^chr//g" | awk \'$3 != \".\"\' | grep "^[#,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,(MT)]" > %s/imputation/%s/tmp.vcf' % (infile, outPath, jobID)
+            subprocess.call([copyInput], shell = True)
+        plinkCMD = '%s --vcf %s/imputation/%s/tmp.vcf --snps-only --recode 23 --out %s/imputation/%s/%s' % (plink, outPath, jobID, outPath, jobID, rawInput)
+        removeTmpVCF = 'rm %s/imputation/%s/tmp.vcf' % (outPath, jobID)
+        subprocess_cmd((plinkCMD, removeTmpVCF))
     elif type == '23andme':
         cpCMD = 'cp %s %s/imputation/%s/%s\.txt' % (infile, outPath, jobID, rawInput)
         subprocess.run(cpCMD, shell = True)
