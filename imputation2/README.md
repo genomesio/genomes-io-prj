@@ -41,7 +41,7 @@ Currently there are several available tests
 | 9 | ukbiobank | GRS, trait, percentage, message | same as `AllDiseases` |
 | 10 | athletics |athletics SNPs, injuries and dietary |   |
 | 11 | appearance | guessed height (gheight) Z score, gheight SNP count, gheight estimate, hair colour |   |
-| 12 | leukemia | GRS, mean and SD for case, mean and SD for control, message and 2 plots for CLL and ALL |   |
+| 12 | leukemia | GRS, mean and SD for case, mean and SD for control, message and 2 plots for CLL and ALL | CLL.pdf and ALL.pdf are saved in `output/job_id` folder |
 | 13 | microbiome | SNP, user genotype, increasing allele, bacteria |   |
 | 14 | nonsenser | SNP, user genotype, common allele, freq, SIFT, Mutation taster, polyphen2, type |   |
 
