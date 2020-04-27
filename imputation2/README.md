@@ -28,7 +28,7 @@ Based on the output in the `imputation` folder, several **genetic tests** will b
 
 Currently there are several available tests
 
-| No. | Test | Output | Note |
+| No. | Test | Output variables | Note |
 | --- | ---- | ------ | ---- |
 | 1 | AllDiseases | GRS, trait, percentage, message | *GRS* = Z-score, *percentage* shows the percentage of the population that have a slower risk score than this person |
 | 2 | autoimmuneDiseases | GRS, disease |   |
@@ -37,7 +37,7 @@ Currently there are several available tests
 | 5 | ethnicity | guessed super population, PCA coordinates, SNP count | a PCA plot can be generated using `pcaPlot.R` script in the `impute-me/ethnicity` folder. Usage: `Rscript pcaPlot.R job_id_data.json impute-me/ethnicity/2017-04-03_ethnicity_pca.rdata impute-me/ethnicity/2017-04-03_ethnicity_descriptions.txt` |
 | 6 | intelligence | GRS, trait, percentage, message | same as `AllDiseases`  |
 | 7 | precisionMedicine | GRS, disease, drug, percentage |   |
-| 8 | rareDiseases | message, diseases of interest, all comparison (all_findings) (*) | (*) if user has a SNP that is present in the reference data, the entry in `all_findings` will have 5 sub-entries, including SNP ID, user genotype, risk allele, non-risk-allele and the corresponding disease. If user's genotype has risk allele, that disease will be mentioned in the `advice` and `diseases of interest` |
+| 8 | rareDiseases | message, diseases of interest, all comparison (all_findings) (*) | (*) if user has a SNP that is present in the reference data, the entry in `all_findings` will have 5 sub-entries, including SNP ID, user genotype, risk allele, non-risk-allele and the corresponding disease. If user's genotype has risk allele, that disease will be mentioned in the `advice` message and `diseases of interest` |
 | 9 | ukbiobank | GRS, trait, percentage, message | same as `AllDiseases` |
 | 10 | athletics |athletics SNPs, injuries and dietary |   |
 | 11 | appearance | guessed height (gheight) Z score, gheight SNP count, gheight estimate, hair colour |   |
@@ -54,4 +54,4 @@ The polygenic risk score is represented as the [Z-score](https://en.wikipedia.or
 
 An example of a *message* for the asthma test: *Ethnicity-corrected trait Z-score is -0.24. This genetic risk score is higher than 40% of the general population. This is a fairly average score. Result from the analysis of 59 SNPs from http://www.ncbi.nlm.nih.gov/pubmed/29273806 Demenais F et al (PMID 29273806), which were reported to be associated with asthma. This study reports a total sample size of 132486, as entered on date 2017-12-22.*
 
-*__Note__: The numbers in the IDs for the traits (1), (4), (6), and (7) are the NCBI pubmed IDs (for example: acute_insulin_response_28490609 will be referenced to https://www.ncbi.nlm.nih.gov/pubmed/28490609).*
+*__Note__: The numbers in the IDs for the test (1), (4), (6), and (7) are the NCBI pubmed IDs (for example: acute_insulin_response_28490609 will be referenced to https://www.ncbi.nlm.nih.gov/pubmed/28490609).*
