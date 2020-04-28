@@ -20,7 +20,8 @@ export_function <- function(uniqueID, moduleDir, outputDir, gtool) {
     
     # get Frequency and 'Common allele' based on 1kg data
     coding_snps[,"Common allele"] <- coding_snps[,"Frequency"] <- NULL #remove the old annovar derived frequency
-    if (ethnicity == "global"){
+    if (is.na(ethnicity) || ethnicity == "global") {
+    # if (ethnicity == "global"){
         coding_snps[,"new_freq"] <- coding_snps[, paste0("AF")]
     } else {
         coding_snps[,"new_freq"] <- coding_snps[, paste0(ethnicity,"_AF")]

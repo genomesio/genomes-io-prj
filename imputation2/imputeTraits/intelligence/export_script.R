@@ -68,7 +68,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
                 textToReturn <- paste0(textToReturn, " This is a fairly average score.")
             }
         }
-        textToReturn <- paste0(textToReturn, " Result from the analysis of ", nrow(SNPs_to_analyze)," SNPs from <u><a target='_blank' href='http://", link, "'>", author," et al (PMID ",pmid,")</a></u>, which were reported to be associated with ", tolower(trait),".")
+        textToReturn <- paste0(textToReturn, " Result from the analysis of ", nrow(SNPs_to_analyze)," SNPs from ", author, " et al (PMID ", pmid, ", http://", link,"), which were reported to be associated with ", tolower(trait),".")
         textToReturn <- paste0(textToReturn, " This study reports a total sample size of ",sampleSize,", as entered on date ", publication_date,".")
 
         output[[study_id]] <- list()

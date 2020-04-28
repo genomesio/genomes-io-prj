@@ -61,14 +61,14 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
                 textToReturn <- paste0(textToReturn, " This is a fairly average score.")
             }
         }
-        textToReturn <- paste0(textToReturn, " Result from the analysis of ", nrow(SNPs_to_analyze)," SNPs from the <u><a href='http://www.ukbiobank.ac.uk/'>UK biobank</a></u>, which were reported to be associated with ", tolower(trait), "(field code: ", sub("_ukbiobank$","",study_id),").")
-        textToReturn <- paste0(textToReturn," The summary statistics were calculated by <u><a href='http://www.nealelab.is/blog/2017/7/19/rapid-gwas-of-thousands-of-phenotypes-for-337000-samples-in-the-uk-biobank'>Neale lab</a></u> and reports a total sample size of ",sampleSize_case," cases and ", sampleSize_control," controls as downloaded on 2017-09-15.")
+        textToReturn <- paste0(textToReturn, " Result from the analysis of ", nrow(SNPs_to_analyze)," SNPs from the UK biobank, which were reported to be associated with ", tolower(trait), "(field code: ", sub("_ukbiobank$","",study_id),").")
+        textToReturn <- paste0(textToReturn," The summary statistics were calculated by Neale lab (http://www.nealelab.is/blog/2017/7/19/rapid-gwas-of-thousands-of-phenotypes-for-337000-samples-in-the-uk-biobank) and reports a total sample size of ",sampleSize_case," cases and ", sampleSize_control," controls as downloaded on 2017-09-15.")
 
-        output[[study_id]] <- list()
-        output[[study_id]][["GRS"]] <- GRS_beta
-        output[[study_id]][["trait"]] <- tolower(trait)
-        output[[study_id]][["percentage"]] <- percentage
-        output[[study_id]][["message"]] <- textToReturn
+        output[[sub("_ukbiobank$","",study_id)]] <- list()
+        output[[sub("_ukbiobank$","",study_id)]][["GRS"]] <- GRS_beta
+        output[[sub("_ukbiobank$","",study_id)]][["trait"]] <- tolower(trait)
+        output[[sub("_ukbiobank$","",study_id)]][["percentage"]] <- percentage
+        output[[sub("_ukbiobank$","",study_id)]][["message"]] <- textToReturn
     }
     return(output)
 }

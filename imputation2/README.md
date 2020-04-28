@@ -15,7 +15,7 @@ python runImputation.py -i ../example.23andme.txt -t 23andme -o impute_output [-
 ### Input
 Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)). *Note: the example.vcf will not work with this imputation module!!! It has SNPs for chromosome 1 only.*
 
-VCF inputs need to be annotated with [rsIDs](https://www.ncbi.nlm.nih.gov/books/NBK44417/#Content.what_is_a_reference_snp_or__rs_i). You can annotate your genome using [this instruction](https://gist.github.com/trvinh/43a0e0724ee7330a45d0c7074f1c0e5f) if needed.
+VCF inputs need to be annotated with [rsIDs](https://www.ncbi.nlm.nih.gov/books/NBK44417/#Content.what_is_a_reference_snp_or__rs_i). You can annotate your genome using [this instruction](https://gist.github.com/trvinh/43a0e0724ee7330a45d0c7074f1c0e5f) if needed. Chromosome IDs must be numeric (e.g.: 1, 2, ..., 22) or X, Y, MT; other format (e.g. Chr1, ChrX,...) must be converted before doing imputation.
 
 ### Output
 The `runImputation.py` will generate a random job ID each time it's called if `-n/--id` not given.
@@ -54,4 +54,4 @@ The polygenic risk score is represented as the [Z-score](https://en.wikipedia.or
 
 An example of a *message* for the asthma test: *Ethnicity-corrected trait Z-score is -0.24. This genetic risk score is higher than 40% of the general population. This is a fairly average score. Result from the analysis of 59 SNPs from http://www.ncbi.nlm.nih.gov/pubmed/29273806 Demenais F et al (PMID 29273806), which were reported to be associated with asthma. This study reports a total sample size of 132486, as entered on date 2017-12-22.*
 
-*__Note__: The numbers in the IDs for the test (1), (4), (6), and (7) are the NCBI pubmed IDs (for example: acute_insulin_response_28490609 will be referenced to https://www.ncbi.nlm.nih.gov/pubmed/28490609).*
+*__Note__: The numbers in the IDs for the test (1), (4), (6), and (7) are the NCBI pubmed IDs (for example: acute_insulin_response_28490609 will be referenced to https://www.ncbi.nlm.nih.gov/pubmed/28490609). For test (9), the ID numbers are the [UKB](http://biobank.ndph.ox.ac.uk/showcase/search.cgi)'s field codes*
