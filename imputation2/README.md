@@ -15,7 +15,7 @@ python runImputation.py -i ../example.23andme.txt -t 23andme -o impute_output [-
 ### Input
 Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)). *Note: the example.vcf will not work with this imputation module!!! It has SNPs for chromosome 1 only.*
 
-VCF inputs need to be annotated with [rsIDs](https://www.ncbi.nlm.nih.gov/books/NBK44417/#Content.what_is_a_reference_snp_or__rs_i). You can annotate your genome using [this instruction](https://gist.github.com/trvinh/43a0e0724ee7330a45d0c7074f1c0e5f) if needed. Chromosome IDs must be numeric (e.g.: 1, 2, ..., 22) or X, Y, MT; other format (e.g. Chr1, ChrX,...) must be converted before doing imputation.
+VCF inputs need to be annotated with [rsIDs](https://www.ncbi.nlm.nih.gov/books/NBK44417/#Content.what_is_a_reference_snp_or__rs_i). You can annotate your genome using [this instruction](https://gist.github.com/trvinh/43a0e0724ee7330a45d0c7074f1c0e5f) if needed. *Chromosome IDs must be numeric (e.g.: 1, 2, ..., 22) or X, Y, MT; other format (e.g. Chr1, ChrX,...) must be converted before doing imputation.*
 
 ### Output
 The `runImputation.py` will generate a random job ID each time it's called if `-n/--id` not given.
