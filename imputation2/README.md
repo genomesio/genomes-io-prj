@@ -30,15 +30,15 @@ Currently there are several available tests
 
 | No. | Test | Output variables | Note |
 | --- | ---- | ------ | ---- |
-| 1 | AllDiseases | GRS, trait, percentage, message | *GRS* = Z-score, *percentage* shows the percentage of the population that have a slower risk score than this person |
+| 1 | AllDiseases | GRS, trait, percentage, message, population SD | *GRS* = Z-score, *percentage* shows the percentage of the population that have a slower risk score than this person |
 | 2 | autoimmuneDiseases | GRS, disease |   |
 | 3 | BRCA | gene , user phenotype, normal phenotype, [clinVar](https://www.ncbi.nlm.nih.gov/clinvar/intro/), polyphen, sift, consequence type | gene is either BRCA1 or BRCA2, which produce a hereditary breast-ovarian cancer syndrome. Read more about [polyphen](http://genetics.bwh.harvard.edu/pph2/), [sift](https://www.ncbi.nlm.nih.gov/pubmed/19561590) |
-| 4 | drugResponse | GRS, disease, drug , percentage |   |
+| 4 | drugResponse | GRS, disease, drug , percentage, population SD |   |
 | 5 | ethnicity | guessed super population, PCA coordinates, SNP count | a PCA plot can be generated using `pcaPlot.R` script in the `impute-me/ethnicity` folder. Usage: `Rscript pcaPlot.R job_id_data.json impute-me/ethnicity/2017-04-03_ethnicity_pca.rdata impute-me/ethnicity/2017-04-03_ethnicity_descriptions.txt` |
-| 6 | intelligence | GRS, trait, percentage, message | same as `AllDiseases`  |
-| 7 | precisionMedicine | GRS, disease, drug, percentage |   |
+| 6 | intelligence | GRS, trait, percentage, message, population SD | same as `AllDiseases`  |
+| 7 | precisionMedicine | GRS, disease, drug, percentage, population SD |   |
 | 8 | rareDiseases | message, diseases of interest, all comparison (all_findings) (*) | (*) if user has a SNP that is present in the reference data, the entry in `all_findings` will have 5 sub-entries, including SNP ID, user genotype, risk allele, non-risk-allele and the corresponding disease. If user's genotype has risk allele, that disease will be mentioned in the `advice` message and `diseases of interest` |
-| 9 | ukbiobank | GRS, trait, percentage, message | same as `AllDiseases` |
+| 9 | ukbiobank | GRS, trait, percentage, message, population SD | same as `AllDiseases` |
 | 10 | athletics |athletics SNPs, injuries and dietary |   |
 | 11 | appearance | guessed height (gheight) Z score, gheight SNP count, gheight estimate, hair colour |   |
 | 12 | leukemia | GRS, mean and SD for case, mean and SD for control, message and 2 plots for CLL and ALL | CLL.pdf and ALL.pdf are saved in `output/job_id` folder |

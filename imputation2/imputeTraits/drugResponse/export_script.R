@@ -53,7 +53,8 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
             disease = disease,
             drug = drug,
             GRS = z_score,
-            percentage = percentage
+            percentage = percentage,
+            pop_sd = population_sum_sd
         )
     }
     return(output)

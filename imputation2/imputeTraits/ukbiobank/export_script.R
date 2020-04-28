@@ -68,6 +68,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
         output[[sub("_ukbiobank$","",study_id)]][["GRS"]] <- GRS_beta
         output[[sub("_ukbiobank$","",study_id)]][["trait"]] <- tolower(trait)
         output[[sub("_ukbiobank$","",study_id)]][["percentage"]] <- percentage
+        output[[sub("_ukbiobank$","",study_id)]][["pop_sd"]] <- population_sum_sd
         output[[sub("_ukbiobank$","",study_id)]][["message"]] <- textToReturn
     }
     return(output)

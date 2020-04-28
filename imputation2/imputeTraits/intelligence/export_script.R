@@ -75,6 +75,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
         output[[study_id]][["GRS"]] <- GRS_beta
         output[[study_id]][["trait"]] <- tolower(trait)
         output[[study_id]][["percentage"]] <- percentage
+        output[[study_id]][["pop_sd"]] <- population_sum_sd
         output[[study_id]][["message"]] <- textToReturn
     }
     return(output)
