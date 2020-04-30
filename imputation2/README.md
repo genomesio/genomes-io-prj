@@ -20,11 +20,13 @@ Input is SNP data in VCF or 23andme format (see [example files](https://github.c
 VCF inputs need to be annotated with [rsIDs](https://www.ncbi.nlm.nih.gov/books/NBK44417/#Content.what_is_a_reference_snp_or__rs_i). You can annotate your genome using [this instruction](https://gist.github.com/trvinh/43a0e0724ee7330a45d0c7074f1c0e5f) if needed. *Chromosome IDs must be numeric (e.g.: 1, 2, ..., 22) or X, Y, MT; other format (e.g. Chr1, ChrX,...) must be converted before doing imputation.*
 
 ### Output
-The `runImputation.py` will generate a random job ID each time it's called if `-n/--id` not given.
+The `runImputation.py` will generate a random job ID each time it's called if `-n/--id` not given. The complete process is split into 2 steps: **imputation** and **testing**.
 
-The **imputation result** will stored in the `imputation/job_id` folder. To automatically delete this directory after finishing, you can add the option `-c/--cleanup` to the command.
+The **imputation result** will stored in the `imputation/job_id` folder. To automatically delete this directory after finishing, you can add the option `-c/--cleanup` to the command. If you want to run the imputation only, you can do it with `-m/--mode imputation`.
 
 Based on the output in the `imputation` folder, several **genetic tests** will be performed. Each test has its own reference SNP data and script saved in the corresponding subfolder within the `imputeTraits` folder. **Genetic testing results** are saved separately in the `output/job_id` folder, where all output in json format can be found in `output/job_id/json_out/`. See [example](https://github.com/trvinh/genomes-io-prj/blob/master/imputation/example/).
+
+The **test** part can be run several times and independently from the **imputation** by using the run mode *test* (`-m/--mode test`) (*NOTE: the imputation step must be finished in order to run the test*). If you want to rerun the test for only one trait catalog, you can define it using option `--trait <trait_name>`.
 
 ## Genetic tests
 
