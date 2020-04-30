@@ -2,6 +2,8 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
     if (!file.exists(outputDir)) {
         stop(paste("Did not find a output data with this id", uniqueID))
     }
+    suppressWarnings(dir.create(file.path(outputDir, "table_out")))
+    suppressWarnings(dir.create(file.path(outputDir, "table_out/drugResponse")))
 
     table_file <- paste0(moduleDir, "/drugResponse/SNPs_to_analyze.txt")
     SNPs_to_analyze <- read.table(table_file, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
@@ -20,7 +22,7 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
     SNPs_to_analyze[, "genotype"] <- SNPs_to_retrieve[SNPs_to_analyze[, "SNP"], "genotype"]
 
     for (study in unique(SNPs_to_analyze[, "PMID"])){
-        d2 <- SNPs_to_analyze[SNPs_to_analyze[, "PMID"]%in%study, ]
+        d2 <- SNPs_to_analyze[SNPs_to_analyze[, "PMID"] %in% study, ]
         disease <- unique(d2[, "disease"])
         drug <- unique(d2[, "drug"])
 
@@ -56,6 +58,19 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
             percentage = percentage,
             pop_sd = population_sum_sd
         )
+        
+        ### save snp table
+        table <- SNPs_to_analyze[SNPs_to_analyze[, "PMID"] %in% study, ]
+        table[, "minor/major allele"] <- apply(table[,c("minor_allele", "major_allele")], 1, paste, collapse = "/")
+        table[, "effect/alternative allele"] <- apply(table[,c("effect_allele", "non_effect_allele")], 1, paste, collapse = "/")
+        order <- c("SNP", "genotype" , "effect/alternative allele", "effect_size", "effect_direction", "effect_measure", "minor/major allele", "minor_allele_freq", "gene", "PMID")
+        missing <- order[!order %in% colnames(table)]
+        if (length(missing) > 0) stop(safeError("Missing some columns"))
+        table[,"minor_allele_freq"] <- signif(table[,"minor_allele_freq"], 2)
+        table[,"effect_size"] <- signif(table[,"effect_size"], 2)
+        table <- table[,order]
+        write.table(table, paste0(outputDir, "/table_out/drugResponse/", study, ".txt"), 
+                    sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
     }
     return(output)
 }

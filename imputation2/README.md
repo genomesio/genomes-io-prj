@@ -11,6 +11,8 @@ This imputation module is created based on the source code of [impute.me](https:
 python runImputation.py -i ../example.23andme.txt -t 23andme -o impute_output [-n job_id]
 ```
 
+_Please check for other parameters with `python runImputation.py -h`_
+
 ## Input and Output
 ### Input
 Input is SNP data in VCF or 23andme format (see [example files](https://github.com/trvinh/genomes-io-prj/tree/master/ancestry)). *Note: the example.vcf will not work with this imputation module!!! It has SNPs for chromosome 1 only.*
@@ -20,7 +22,7 @@ VCF inputs need to be annotated with [rsIDs](https://www.ncbi.nlm.nih.gov/books/
 ### Output
 The `runImputation.py` will generate a random job ID each time it's called if `-n/--id` not given.
 
-The **imputation result** will stored in the `imputation/job_id` folder.
+The **imputation result** will stored in the `imputation/job_id` folder. To automatically delete this directory after finishing, you can add the option `-c/--cleanup` to the command.
 
 Based on the output in the `imputation` folder, several **genetic tests** will be performed. Each test has its own reference SNP data and script saved in the corresponding subfolder within the `imputeTraits` folder. **Genetic testing results** are saved separately in the `output/job_id` folder, where all output in json format can be found in `output/job_id/json_out/`. See [example](https://github.com/trvinh/genomes-io-prj/blob/master/imputation/example/).
 

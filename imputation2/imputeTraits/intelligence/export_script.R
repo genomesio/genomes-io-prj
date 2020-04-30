@@ -2,6 +2,8 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
     if (!file.exists(outputDir)) {
         stop(paste("Did not find a output data with this id", uniqueID))
     }
+    suppressWarnings(dir.create(file.path(outputDir, "table_out")))
+    suppressWarnings(dir.create(file.path(outputDir, "table_out/intelligence")))
 
     snps_file <- paste0(moduleDir, "/intelligence/2019-03-04_semi_curated_version_gwas_central.rdata")
     trait_file <- paste0(moduleDir, "/intelligence/2019-03-04_trait_overview.xlsx")
@@ -77,6 +79,45 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
         output[[study_id]][["percentage"]] <- percentage
         output[[study_id]][["pop_sd"]] <- population_sum_sd
         output[[study_id]][["message"]] <- textToReturn
+        
+        ### save snp table
+        # summarising allele info into single-columns
+        snp_data[, "Risk/non-risk Allele"] <- paste(
+            snp_data[, "effect_allele"],
+            snp_data[, "non_effect_allele"],
+            sep="/"
+        )
+        snp_data[, "Major/minor Allele"] <- paste(
+            snp_data[,"major_allele"],
+            snp_data[,"minor_allele"],
+            sep="/"
+        )
+        # rounding MAF and effect_size
+        snp_data[, "minor_allele_freq"] <- signif(snp_data[, "minor_allele_freq"], 2)
+        snp_data[, "effect_size"] <- signif(snp_data[, "effect_size"], 3)
+        # shortening the reported gene count
+        snp_data[, "reported_genes"] <- sapply(
+            strsplit(snp_data[, "reported_genes"], ", "), 
+            function (x) {
+                paste(x[1 : min(c(2, length(x)))], collapse = ", ")
+            }
+        )
+        # marking duplicates
+        for (col in c("genotype", "personal_score", "score_diff")) {
+            snp_data[is.na(snp_data[,col]),col] <- ""
+        }
+        
+        keep <- c(
+            "SNP","genotype","Risk/non-risk Allele","effect_size","personal_score",
+            "score_diff" ,"p_value","Major/minor Allele","minor_allele_freq","reported_genes"
+        )
+        snp_data <- snp_data[,keep]
+        colnames(snp_data) <- c(
+            "SNP","Your Genotype","Risk/ non-risk Allele","Effect Size","SNP-score",
+            "SNP-score (population normalized)","P-value","Major/ minor Allele","Minor Allele Frequency","Reported Gene"
+        )
+        write.table(snp_data, paste0(outputDir, "/table_out/intelligence/", study_id, ".txt"), 
+                    sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
     }
     return(output)
 }

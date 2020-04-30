@@ -111,6 +111,7 @@ def main():
                                         'Test mode will run only the tests based on pre-computed imputation data. Default: full',
                                         choices=['full', 'impute', 'test'], action='store', default='full')
     optional.add_argument('-n', '--id', help='Job ID. If not given, a random string will be generated.', action='store', default='')
+    optional.add_argument('-c', '--cleanup', help='Clean up imputation files.', action='store_true')
     optional.add_argument('--trait', help='Trait names for report. If not set, all available traits will be reported.', action='store', default='all')
     args = parser.parse_args()
 
@@ -124,6 +125,7 @@ def main():
     jobID = args.id
     if (jobID == ''):
         jobID = 'id_' + randomStringDigits(9)
+    cleanup = args.cleanup
     trait = args.trait
     if not trait == "all":
         checkFileExist(cfg['imputeTraits'] + "/" + trait)
@@ -135,6 +137,9 @@ def main():
     imputeCMD = 'Rscript %s/imputation_a2z.R %s %s %s %s %s %s %s %s %s %s %s %s' % (scriptPath, trait, mode, jobID, runDir, outputDir, cfg['shapeit'], cfg['plink'], cfg['gtool'], cfg['impute2'], cfg['sample_ref'], cfg['imputeDataDir'], cfg['imputeTraits'])
     # print(imputeCMD)
     subprocess.run(imputeCMD, shell = True)
+    if cleanup:
+        rmCMd = 'rm -rf %s' % (runDir)
+        subprocess.run(rmCMd, shell = True)
     print('Finished! Check outputs in %s folder.' % (outputDir))
 
 if __name__ == '__main__':
