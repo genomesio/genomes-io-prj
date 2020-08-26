@@ -6,6 +6,10 @@ import os
 import yaml
 import json
 
+def checkFileExist(file):
+    if not os.path.exists(os.path.abspath(file)):
+        sys.exit('%s not found' % file)
+	
 def load_config(config_file):
 	with open(config_file, 'r') as stream:
 		try:
@@ -87,6 +91,9 @@ def main(argv):
 			model = arg
 
 	cfg = load_config('config.yml')
+	
+	input = os.path.abspath(input)
+	checkFileExist(input)
 
 	allModels = ["all", "K7b", "K12b", "globe13", "globe10", "world9", "Eurasia7", "Africa9", "weac2", "E11", "K36", "EUtest13", "Jtest14", "HarappaWorld", "TurkicK11", "KurdishK10", "AncientNearEast13", "K7AMI", "K8AMI", "MDLPK27", "puntDNAL", "K47", "K7M1", "K13M2", "K14M1", "K18M4", "K25R1", "MichalK25"]
 	if model not in allModels:
