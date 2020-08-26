@@ -113,7 +113,7 @@ def main(argv):
 		if fileExt == 'gz':
 			removeContig = 'bgzip -dc %s | sed "s/^chr//g" | grep "^[#,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,(MT)]" > tmp/tmp.vcf' % (input)
 		else:
-			removeContig = 'sed "s/^chr//g" %s | grep "^[#,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,(MT)]" %s > tmp/tmp.vcf' % (input)
+			removeContig = 'sed "s/^chr//g" %s | grep "^[#,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,(MT)]" %s > tmp/tmp.vcf' % (input, input)
 		plinkCMD = '%s --vcf tmp/tmp.vcf --snps-only --recode 23 --out tmp/tmp.23andme' % (cfg['plink'])
 		removeVCF = 'rm tmp/tmp.vcf'
 		subprocess_cmd((removeContig, plinkCMD, removeVCF))
