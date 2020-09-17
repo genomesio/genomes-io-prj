@@ -118,6 +118,10 @@ export_function <- function(uniqueID, moduleDir, outputDir, gtool) {
             "SNP","Your Genotype","Risk/ non-risk Allele","Effect Size","SNP-score",
             "SNP-score (population normalized)","P-value","Major/ minor Allele","Minor Allele Frequency","Reported Gene"
         )
+        # print(study_id)
+        study_id <- gsub("<", "lt", study_id)
+        study_id <- gsub(">", "gt", study_id)
+        study_id <- gsub(":", "-", study_id)
         write.table(snp_data, paste0(outputDir, "/table_out/allDiseases/", study_id, ".txt"), 
                     sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
     }

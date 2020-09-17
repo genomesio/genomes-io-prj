@@ -20,7 +20,6 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
     SNPs_to_retrieve <- get_genotypes(uniqueID = uniqueID, request = SNPs_to_retrieve, gtool = gtool, destinationDir = outputDir)
     # inserting SNPs and calculating GRS
     SNPs_to_analyze[, "genotype"] <- SNPs_to_retrieve[SNPs_to_analyze[, "SNP"], "genotype"]
-
     for (study in unique(SNPs_to_analyze[, "PMID"])){
         d2 <- SNPs_to_analyze[SNPs_to_analyze[, "PMID"] %in% study, ]
         disease <- unique(d2[, "disease"])
@@ -33,7 +32,6 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
 
         rownames(d2) <- d2[, "SNP"]
         d3 <- try(get_GRS_2(d2, mean_scale = TRUE, unit_variance = TRUE, verbose = FALSE))
-
         if (class(d3) == "try-error") {
             z_score <- "Not calculated"
             percentage <- "Not calculated"
@@ -61,14 +59,21 @@ export_function <- function (uniqueID, moduleDir, outputDir, gtool) {
         
         ### save snp table
         table <- SNPs_to_analyze[SNPs_to_analyze[, "PMID"] %in% study, ]
+        # join with score_diff from d3
+        d3sub <- d3[,c("SNP","score_diff")]
+        table <- merge(table, d3sub, by = "SNP", all.x = TRUE)
         table[, "minor/major allele"] <- apply(table[,c("minor_allele", "major_allele")], 1, paste, collapse = "/")
         table[, "effect/alternative allele"] <- apply(table[,c("effect_allele", "non_effect_allele")], 1, paste, collapse = "/")
-        order <- c("SNP", "genotype" , "effect/alternative allele", "effect_size", "effect_direction", "effect_measure", "minor/major allele", "minor_allele_freq", "gene", "PMID")
+        order <- c("SNP", "genotype" , "effect/alternative allele", "effect_size", "effect_direction", "effect_measure", "score_diff", "minor/major allele", "minor_allele_freq", "gene", "PMID")
         missing <- order[!order %in% colnames(table)]
         if (length(missing) > 0) stop(safeError("Missing some columns"))
         table[,"minor_allele_freq"] <- signif(table[,"minor_allele_freq"], 2)
         table[,"effect_size"] <- signif(table[,"effect_size"], 2)
         table <- table[,order]
+        colnames(table) <- c(
+            "SNP","Your Genotype","Risk/ non-risk Allele","Effect Size","Effect Direction", "Effect Measure",
+            "SNP-score (population normalized)","Minor/ major Allele","Minor Allele Frequency","Reported Gene","PMID"
+        )
         write.table(table, paste0(outputDir, "/table_out/drugResponse/", study, ".txt"), 
                     sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
     }
