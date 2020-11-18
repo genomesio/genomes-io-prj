@@ -91,7 +91,8 @@ def main(argv):
         elif opt in ('-m','--model'):
             model = arg
 
-    cfg = load_config('config.yml')
+    admixPath = os.path.realpath(__file__).replace('/runAdmix.py','')
+    cfg = load_config(admixPath + '/config.yml')
     checkFileExist(cfg['plink'])
 
     # input file and output directory
@@ -120,7 +121,7 @@ def main(argv):
         if fileExt == 'gz':
             removeContig = 'bgzip -dc %s | sed "s/^chr//g" | grep "^[#,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,(MT)]" > %s/tmp/tmp.vcf' % (input, output)
         else:
-            removeContig = 'sed "s/^chr//g" %s | grep "^[#,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,(MT)]" %s > %s/tmp/tmp.vcf' % (input, input, output)
+            removeContig = 'less %s | sed "s/^chr//g" | grep "^[#,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,(MT)]" > %s/tmp/tmp.vcf' % (input, output)
         plinkCMD = '%s --vcf %s/tmp/tmp.vcf --snps-only --recode 23 --out %s/tmp/tmp.23andme' % (cfg['plink'], output, output)
         removeVCF = 'rm %s/tmp/tmp.vcf' % (output)
         subprocess_cmd((removeContig, plinkCMD, removeVCF))
@@ -136,7 +137,7 @@ def main(argv):
 
     # remove unidentified SNPs
     if not os.path.exists(os.path.abspath(output + "/tmp/tmp.23andme.txt")):
-        sys.exit('%s/tmp/tmp.23andme.txt not found. Input parsing failed!' % file)
+        sys.exit('%s/tmp/tmp.23andme.txt not found. Input parsing failed!' % (output + "/tmp/tmp.23andme.txt"))
     removeSNP = 'awk \'$2 != \".\"\' %s/tmp/tmp.23andme.txt > %s/tmp/tmp.23andme.txt.mod' % (output, output)
     replaceCMD = 'mv %s/tmp/tmp.23andme.txt.mod %s/tmp/tmp.23andme.txt' % (output, output)
     subprocess_cmd((removeSNP, replaceCMD))
